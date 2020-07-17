@@ -1,0 +1,8 @@
+--langdef=blist
+--map-blist=+.blist
+
+--kinddef-blist=t,tag,tags
+--kinddef-blist=p,person,people
+
+--mline-regex-blist=/[[:space:]]##?(\w+)/\1/t/{mgroup=1}
+--mline-regex-blist=/[[:space:]]@@?(\w+)/\1/p/{mgroup=1}
