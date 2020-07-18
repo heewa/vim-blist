@@ -54,9 +54,6 @@ nnoremap <buffer> <silent> z<Tab> :call BlistIndent()<CR>
 vnoremap <buffer> <silent> z> :call BlistIndent()<CR>
 vnoremap <buffer> <silent> z<Tab> :call BlistIndent()<CR>
 
-"   TODO: make optional
-imap <buffer> <silent> <Tab> <C-o>:call BlistIndent()<CR>
-
 " TODO: swap with previous sibling
 " TODO: swap with next sibling
 
