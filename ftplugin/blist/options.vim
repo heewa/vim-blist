@@ -1,4 +1,6 @@
-set foldenable
+" Fold behavior
+setlocal foldenable
+setlocal foldlevel=0
 
 " Tabs
 setlocal shiftwidth=0
@@ -11,6 +13,12 @@ setlocal wrap
 setlocal breakindent
 setlocal breakindentopt=shift:2
 setlocal linebreak
+
+augroup BLIST_VIEWS
+    autocmd!
+    autocmd BufWinLeave *.blist mkview
+    autocmd BufWinEnter *.blist silent! loadview
+augroup END
 
 " Start a new bullet on newline, by treating them as comments
 setlocal autoindent
