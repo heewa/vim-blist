@@ -12,6 +12,7 @@ setlocal breakindent
 setlocal breakindentopt=shift:2
 setlocal linebreak
 
-" TODO: Start a new bullet on newline, by treating them as comments
+" Start a new bullet on newline, by treating them as comments
 setlocal autoindent
-"setlocal comments=b:*
+setlocal comments=b:*,b:-,b:+
+setlocal formatoptions=roj
