@@ -80,8 +80,8 @@ function! s:ToggleFold(lnum)
 endfunction
 
 function! s:CloseFold(lnum)
-    if indent(a:lnum) >= indent(a:lnum + 1)
-        " No children
+    if indent(a:lnum) >= indent(a:lnum + 1) || foldclosed(a:lnum + 1) >= 0
+        " No children or fold already closed
         return
     else
         silent normal! jzck
