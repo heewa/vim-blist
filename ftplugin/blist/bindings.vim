@@ -50,10 +50,10 @@ noremap <buffer> <silent> zp ]p
 noremap <buffer> <silent> zP ]P
 
 " Indent
-nnoremap <buffer> <silent> z> :call BlistIndent()<CR>
-nnoremap <buffer> <silent> z<Tab> :call BlistIndent()<CR>
-vnoremap <buffer> <silent> z> :call BlistIndent()<CR>
-vnoremap <buffer> <silent> z<Tab> :call BlistIndent()<CR>
+nmap <buffer> <silent> z> <Plug>BlistIndent
+nmap <buffer> <silent> z<Tab> <Plug>BlistIndent
+vmap <buffer> <silent> z> <Plug>BlistIndent
+vmap <buffer> <silent> z<Tab> <Plug>BlistIndent
 
 " TODO: swap with previous sibling
 " TODO: swap with next sibling

@@ -1,3 +1,23 @@
+"
+" Commands
+"
+
+" Move cursor to bullet on given line
+command -nargs=1 BlistMove exe 'normal' string(<args>) . 'G^'
+
+command -range BlistIndent exe <SID>GetIndentCommand(<line1>, <line2>)
+
+"
+" Plug Mappings
+"
+
+nnoremap <silent> <Plug>BlistIndent :BlistIndent<CR>
+vnoremap <silent> <Plug>BlistIndent :BlistIndent<CR>
+
+"
+" Private Functions
+"
+
 function! BlistToggleComplete()
     let l:orig_pos = getcurpos()
 
@@ -8,17 +28,19 @@ function! BlistToggleComplete()
     call setpos('.', l:orig_pos)
 endfunction
 
-function! BlistIndent() range
+" Find the end line to be indented from a range, or -1 if it's
+" an invalid indent.
+function! s:FindIndentEnd(first_line, last_line)
     " Don't indent if doing so would leave first line without parent
-    if a:firstline > 1 && indent(a:firstline) > indent(a:firstline - 1)
-        return
+    if a:first_line > 1 && indent(a:first_line) > indent(a:first_line - 1)
+        return -1
     endif
 
     " Find least indented so we can include all the children of all items
     " in this range
-    let l:lnum = a:firstline
+    let l:lnum = a:first_line
     let l:indent = indent(l:lnum)
-    while l:lnum < a:lastline
+    while l:lnum < a:last_line
         let l:lnum += 1
         let l:indent = min([l:indent, indent(l:lnum)])
     endwhile
@@ -28,7 +50,20 @@ function! BlistIndent() range
         let l:lnum += 1
     endwhile
 
-    silent exe string(a:firstline) . ',' . string(l:lnum) . '>'
+    return l:lnum
+endfunction
+
+function! s:GetIndentCommand(...)
+    let l:first_line = get(a:, 1, line('.'))
+    let l:last_line = s:FindIndentEnd(
+        \l:first_line,
+        \get(a:, 2, l:first_line))
+
+    if l:last_line < 0
+        return ''
+    endif
+
+    return string(l:first_line) . ',' . string(l:last_line) . '>'
 endfunction
 
 function! BlistToggleFold_Nextline(lnum)
