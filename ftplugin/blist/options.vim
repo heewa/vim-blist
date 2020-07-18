@@ -1,6 +1,7 @@
 " Fold behavior
 setlocal foldenable
 setlocal foldlevel=0
+setlocal foldminlines=0
 
 " Tabs
 setlocal shiftwidth=0
