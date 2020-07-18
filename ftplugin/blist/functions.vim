@@ -6,10 +6,6 @@ command! -nargs=1 BlistMove exe 'normal' string(<args>) . 'G^'
 
 command! -range BlistIndent exe <SID>GetIndentCommand(<line1>, <line2>)
 
-command! BlistToggleFold call <SID>ToggleFold(line('.'))
-command! BlistOpenFold call <SID>OpenFold(line('.'))
-command! BlistCloseFold call <SID>CloseFold(line('.'))
-
 "
 " Plug Mappings
 "
@@ -17,9 +13,11 @@ command! BlistCloseFold call <SID>CloseFold(line('.'))
 nnoremap <silent> <Plug>BlistIndent :BlistIndent<CR>
 vnoremap <silent> <Plug>BlistIndent :BlistIndent<CR>
 
-nnoremap <silent> <Plug>BlistToggleFold :BlistToggleFold<CR>
-nnoremap <silent> <Plug>BlistOpenFold :BlistOpenFold<CR>
-nnoremap <silent> <Plug>BlistCloseFold :BlistCloseFold<CR>
+nnoremap <silent> <Plug>BlistToggleFold :call <SID>ToggleFold(line('.'))<CR>
+nnoremap <silent> <Plug>BlistOpenFold :call <SID>OpenFold(line('.'))<CR>
+nnoremap <silent> <Plug>BlistCloseFold :call <SID>CloseFold(line('.'))<CR>
+
+nnoremap <silent> <Plug>BlistDelete :BlistDelete<CR>
 
 "
 " Private Functions
