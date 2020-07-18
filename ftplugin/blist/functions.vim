@@ -2,10 +2,13 @@
 " Commands
 "
 
-" Move cursor to bullet on given line
 command! -nargs=1 BlistMove exe 'normal' string(<args>) . 'G^'
 
 command! -range BlistIndent exe <SID>GetIndentCommand(<line1>, <line2>)
+
+command! BlistToggleFold call <SID>ToggleFold(line('.'))
+command! BlistOpenFold call <SID>OpenFold(line('.'))
+command! BlistCloseFold call <SID>CloseFold(line('.'))
 
 "
 " Plug Mappings
@@ -13,6 +16,10 @@ command! -range BlistIndent exe <SID>GetIndentCommand(<line1>, <line2>)
 
 nnoremap <silent> <Plug>BlistIndent :BlistIndent<CR>
 vnoremap <silent> <Plug>BlistIndent :BlistIndent<CR>
+
+nnoremap <silent> <Plug>BlistToggleFold :BlistToggleFold<CR>
+nnoremap <silent> <Plug>BlistOpenFold :BlistOpenFold<CR>
+nnoremap <silent> <Plug>BlistCloseFold :BlistCloseFold<CR>
 
 "
 " Private Functions
@@ -66,25 +73,29 @@ function! s:GetIndentCommand(...)
     return string(l:first_line) . ',' . string(l:last_line) . '>'
 endfunction
 
-function! BlistToggleFold_Nextline(lnum)
-    let l:curr_indent = indent(a:lnum)
-    let l:next_indent = indent(a:lnum + 1)
+function! s:ToggleFold(lnum)
+    if foldclosed(a:lnum + 1) < 0
+        call s:CloseFold(a:lnum)
+    else
+        call s:OpenFold(a:lnum)
+    endif
+endfunction
 
-    if foldclosed(a:lnum) >= 0
-        " The line we're on is a closed fold, which isn't meant to be used
-        " for this, but let's open it
-        silent normal! zok
-        "silent exe string(a:lnum) . ',' . string(a:lnum) . 'foldopen'
-    elseif l:curr_indent < l:next_indent
-        let l:close_start = foldclosed(a:lnum + 1)
+function! s:CloseFold(lnum)
+    if indent(a:lnum) >= indent(a:lnum + 1)
+        " No children
+        return
+    else
+        silent normal! jzck
+    endif
+endfunction
 
-        if l:close_start < 0 && indent(a:lnum + 2) > l:curr_indent
-            " Only attempt to close multi-line children
-            silent normal! jzck
-        elseif l:close_start >= 0
-            " Open the fold
-            silent normal! jzok
-        endif
+function! s:OpenFold(lnum)
+    if indent(a:lnum) >= indent(a:lnum + 1)
+        " No children
+        return
+    else
+        silent normal! jzok
     endif
 endfunction
 

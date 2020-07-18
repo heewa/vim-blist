@@ -1,20 +1,16 @@
 " Folds
 
-"   toggle open/close
-nnoremap <buffer> <silent> za :call BlistToggleFold_Nextline(line('.'))<CR>
-nnoremap <buffer> <silent> z<space> :call BlistToggleFold_Nextline(line('.'))<CR>
+if !hasmapto('<Plug>BlistToggleFold', 'n')
+    nmap <buffer> <silent> za <Plug>BlistToggleFold
+endif
 
-"   open  TODO: visual version - only work on top lvl items
-nnoremap <buffer> <silent> zo :.+,.+foldopen<CR>
+if !hasmapto('<Plug>BlistOpenFold', 'n')
+    nmap <buffer> <silent> zo <Plug>BlistOpenFold
+endif
 
-"   open al  TODO: visual version - only work on top lvl itemsl
-nnoremap <buffer> <silent> zO :.+,.+foldopen!<CR>
-
-"   close  TODO: visual version - only work on top lvl items
-nnoremap <buffer> <silent> zc :.+,.+foldclose<CR>
-
-"   close al  TODO: visual version - only work on top lvl itemsl
-nnoremap <buffer> <silent> zC :.+,.+foldclose!<CR>
+if !hasmapto('<Plug>BlistCloseFold', 'n')
+    nmap <buffer> <silent> zc <Plug>BlistCloseFold
+endif
 
 " Focus: close all other folds
 nnoremap <buffer> <silent> zf :call BlistFocus(line('.'))<CR>
