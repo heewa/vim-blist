@@ -3,9 +3,9 @@
 "
 
 " Move cursor to bullet on given line
-command -nargs=1 BlistMove exe 'normal' string(<args>) . 'G^'
+command! -nargs=1 BlistMove exe 'normal' string(<args>) . 'G^'
 
-command -range BlistIndent exe <SID>GetIndentCommand(<line1>, <line2>)
+command! -range BlistIndent exe <SID>GetIndentCommand(<line1>, <line2>)
 
 "
 " Plug Mappings
