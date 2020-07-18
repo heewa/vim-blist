@@ -23,7 +23,8 @@ nnoremap <buffer> <silent> zf :call BlistFocus(line('.'))<CR>
 nnoremap <buffer> <silent> zF zMzvjzOk
 
 " Toggle complete
-nnoremap <buffer> <silent> z<return> :s/^\(\s*\)\([*-]\)/\=submatch(1) . {'*': '-', '-': '*'}[submatch(2)]/<CR>
+"nnoremap <buffer> <silent> z<return> :s/^\(\s*\)\([*-]\)/\=submatch(1) . {'*': '-', '-': '*'}[submatch(2)]/<CR>
+nnoremap <buffer> <silent> z<return> :call BlistToggleComplete()<CR>
 
 " Movements
 noremap <buffer> <silent> zh :BlistMove BlistParent(line('.'), 0)<CR>

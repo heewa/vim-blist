@@ -1,3 +1,13 @@
+function! BlistToggleComplete()
+    let l:orig_pos = getcurpos()
+
+    s/
+        \^\(\s*\)\([*-]\)/
+        \\=submatch(1) . {'*': '-', '-': '*'}[submatch(2)]/
+
+    call setpos('.', l:orig_pos)
+endfunction
+
 function! BlistIndent() range
     " Don't indent if doing so would leave first line without parent
     if a:firstline > 1 && indent(a:firstline) > indent(a:firstline - 1)
