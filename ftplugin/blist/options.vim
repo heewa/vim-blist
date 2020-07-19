@@ -29,14 +29,4 @@ augroup END
 setlocal autoindent
 setlocal comments=b:*,b:-,b:+
 setlocal formatoptions=roj
-setlocal indentexpr=BlistCalcNewBulletIndent()
-
-" Indent a new bullet as a child if there are any, otherwise
-" as a sibling.
-"
-" NOTE: For some reason <SID> doesn't work in 'indentexpr'
-function! BlistCalcNewBulletIndent()
-    let l:curr = indent(v:lnum)
-    let l:next = indent(v:lnum + 1)
-    return l:curr > l:next ? l:curr : l:next
-endfunction
+setlocal indentexpr=blist#bullets#calcNewIndent()

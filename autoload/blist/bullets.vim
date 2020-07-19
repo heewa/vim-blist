@@ -16,6 +16,13 @@ function! blist#bullets#indent() range
     endif
 endfunction
 
+" Indent a new bullet as a child if there are any, otherwise as a sibling.
+function! blist#bullets#calcNewIndent()
+    let l:curr = indent(v:lnum)
+    let l:next = indent(nextnonblank(v:lnum + 1))
+    return l:curr > l:next ? l:curr : l:next
+endfunction
+
 "
 " Private
 "
@@ -24,7 +31,8 @@ endfunction
 " an invalid indent.
 function! s:FindIndentEnd(first_line, last_line)
     " Don't indent if doing so would leave first line without parent
-    if a:first_line > 1 && indent(a:first_line) > indent(a:first_line - 1)
+    if a:first_line > 1 &&
+            \indent(a:first_line) > indent(prevnonblank(a:first_line - 1))
         return -1
     endif
 
@@ -33,13 +41,14 @@ function! s:FindIndentEnd(first_line, last_line)
     let l:lnum = a:first_line
     let l:indent = indent(l:lnum)
     while l:lnum < a:last_line
-        let l:lnum += 1
+        let l:lnum = nextnonblank(l:lnum + 1)
         let l:indent = min([l:indent, indent(l:lnum)])
     endwhile
 
     " Continue down to find end of tree
-    while indent(l:lnum + 1) > l:indent
-        let l:lnum += 1
+    let l:next = nextnonblank(l:lnum + 1)
+    while indent(l:next) > l:indent
+        let [l:lnum, l:next] = [l:next, nextnonblank(l:next + 1)]
     endwhile
 
     return l:lnum
