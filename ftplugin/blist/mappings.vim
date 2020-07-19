@@ -26,7 +26,9 @@ call s:mapUser('', 'zJ', 'MoveNext')
 
 call s:mapUser('n', 'za', 'Toggle')
 call s:mapUser('n', 'zo', 'Open')
+call s:mapUser('n', 'zO', 'FullyOpen')
 call s:mapUser('n', 'zc', 'Close')
+call s:mapUser('n', 'zC', 'FullyClose')
 
 call s:mapUser('n', 'zf', 'Focus')
 call s:mapUser('n', 'zF', 'FullyFocus')
@@ -62,7 +64,9 @@ call s:mapPlug('', 'MoveNext',
 
 call s:mapPlug('n', 'Toggle', ':call blist#fold#toggle(line("."))<CR>')
 call s:mapPlug('n', 'Open', ':call blist#fold#open(line("."))<CR>')
+call s:mapPlug('n', 'FullyOpen', ':call blist#fold#fullyOpen(line("."))<CR>')
 call s:mapPlug('n', 'Close', ':call blist#fold#close(line("."))<CR>')
+call s:mapPlug('n', 'FullyClose', ':call blist#fold#fullyClose(line("."))<CR>')
 
 call s:mapPlug('n', 'Focus', ':call blist#fold#focus(line("."))<CR>')
 call s:mapPlug('n', 'FullyFocus', 'zMzvjzOk')
