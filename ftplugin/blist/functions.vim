@@ -2,8 +2,6 @@
 " Commands
 "
 
-command! -nargs=1 BlistMove exe 'normal' string(<args>) . 'G^'
-
 command! -range BlistIndent exe <SID>GetIndentCommand(<line1>, <line2>)
 
 "
@@ -97,75 +95,6 @@ function! s:OpenFold(lnum)
     endif
 endfunction
 
-function! BlistNext(lnum, to_before)
-    let l:start_indent = indent(a:lnum)
-    let l:lnum = a:lnum + 1
-    let l:indent = indent(l:lnum)
-
-    while l:indent >= 0 && l:indent > l:start_indent
-        let l:lnum += 1
-        let l:indent = indent(l:lnum)
-    endwhile
-
-    " TODO: everything's broken :( I should do this while sober
-    if l:indent < 0 || a:to_before && l:indent >= l:start_indent
-        let l:lnum -= 1
-    endif
-
-    return l:lnum
-endfunction
-
-function! BlistPrevious(lnum, to_before)
-    let l:start_indent = indent(a:lnum)
-    let l:lnum = a:lnum - 1
-    let l:indent = indent(l:lnum)
-
-    while l:indent >= 0 && l:indent > l:start_indent
-        let l:lnum -= 1
-        let l:indent = indent(l:lnum)
-    endwhile
-
-    if l:indent < 0 || a:to_before && l:indent <= l:start_indent
-        let l:lnum += 1
-    endif
-
-    return l:lnum
-endfunction
-
-function! BlistParent(lnum, to_before)
-    let l:start_indent = indent(a:lnum)
-    let l:lnum = a:lnum - 1
-    let l:indent = indent(l:lnum)
-
-    while l:indent >= 0 && l:indent >= l:start_indent
-        let l:lnum -= 1
-        let l:indent = indent(l:lnum)
-    endwhile
-
-    if a:to_before && l:indent >= 0 && l:indent < l:start_indent
-        return l:lnum + 1
-    endif
-
-    return l:indent >= 0 && l:indent < l:start_indent ? l:lnum : a:lnum
-endfunction
-
-function! BlistChild(lnum, to_end)
-    let l:start_indent = indent(a:lnum)
-    let l:lnum = a:lnum + 1
-    let l:indent = indent(l:lnum)
-
-    while a:to_end && l:indent > l:start_indent
-        let l:lnum += 1
-        let l:indent = indent(l:lnum)
-    endwhile
-
-    if l:indent >= 0 && l:indent <= l:start_indent
-        let l:line -= 1
-    endif
-
-    return l:line
-endfunction
-
 function! BlistClose(lnum, all)
     " This should be called on an item, not its children, but it might
     " be anyway?
@@ -182,11 +111,11 @@ function! BlistFocus(lnum)
     " Close folds above
     "   * sweep up & left, closing as we go, until we hit root
     let l:prev = a:lnum
-    let l:to_close = BlistPrevious(l:prev, 0)
+    let l:to_close = blist#movement#previous(l:prev)
     while l:to_close != l:prev && indent(l:to_close) > 0
         call BlistClose(l:to_close, 0)
         let l:prev = l:to_close
-        let l:to_close = BlistPrevious(l:prev, 0)
+        let l:to_close = blist#movement#previous(l:prev)
     endwhile
 
     "   * then just close folds from there to top
@@ -197,11 +126,11 @@ function! BlistFocus(lnum)
     " Repeat below
     "   * sweep down & left, closing as we go, until we hit root
     let l:prev = a:lnum
-    let l:to_close = BlistNext(l:prev, 0)
+    let l:to_close = blist#movement#next(l:prev)
     while l:to_close != l:prev && indent(l:to_close) > 0
         call BlistClose(l:to_close, 0)
         let l:prev = l:to_close
-        let l:to_close = BlistNext(l:prev, 0)
+        let l:to_close = blist#movement#next(l:prev)
     endwhile
 
     "   * then just close folds from there to bottom

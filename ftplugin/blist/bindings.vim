@@ -22,18 +22,6 @@ nnoremap <buffer> <silent> zF zMzvjzOk
 "nnoremap <buffer> <silent> z<return> :s/^\(\s*\)\([*-]\)/\=submatch(1) . {'*': '-', '-': '*'}[submatch(2)]/<CR>
 nnoremap <buffer> <silent> z<return> :call BlistToggleComplete()<CR>
 
-" Movements
-noremap <buffer> <silent> zh :BlistMove BlistParent(line('.'), 0)<CR>
-noremap <buffer> <silent> zl :BlistMove BlistChild(line('.'), 0)<CR>
-noremap <buffer> <silent> zk :BlistMove BlistPrevious(line('.'), 0)<CR>
-noremap <buffer> <silent> zj :BlistMove BlistNext(line('.'), 0)<CR>
-
-" TODO: Movements "to" (before, not including, helpful for deleting)
-noremap <buffer> <silent> zth :BlistMove BlistParent(line('.'), 1)<CR>
-noremap <buffer> <silent> ztl :BlistMove BlistChild(line('.'), 1)<CR>
-noremap <buffer> <silent> ztk :BlistMove BlistPrevious(line('.'), 1)<CR>
-noremap <buffer> <silent> ztj :BlistMove BlistNext(line('.'), 1)<CR>
-
 " TODO: delete, with children
 nmap <buffer> <silent> zd dztj
 
