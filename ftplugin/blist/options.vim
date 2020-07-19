@@ -2,6 +2,8 @@
 setlocal foldenable
 setlocal foldlevel=0
 setlocal foldminlines=0
+setlocal foldmethod=indent
+setlocal foldtext=blist#fold#text(v:foldstart)
 
 " Tabs
 setlocal shiftwidth=0
