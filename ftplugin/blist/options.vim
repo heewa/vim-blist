@@ -15,6 +15,8 @@ setlocal breakindent
 setlocal breakindentopt=shift:2
 setlocal linebreak
 
+" Only save/load fold-view-state for a file
+setlocal viewoptions=folds
 augroup BLIST_VIEWS
     autocmd!
     autocmd BufWinLeave *.blist mkview
