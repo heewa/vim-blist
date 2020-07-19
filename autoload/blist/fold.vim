@@ -33,11 +33,11 @@ function! blist#fold#focus(lnum)
     " Close folds above
     "   * sweep up & left, closing as we go, until we hit root
     let l:prev = a:lnum
-    let l:to_close = blist#movement#previous(l:prev)
+    let l:to_close = blist#move#prevSibling(l:prev)
     while l:to_close != l:prev && indent(l:to_close) > 0
         call blist#fold#close(l:to_close)
         let l:prev = l:to_close
-        let l:to_close = blist#movement#previous(l:prev)
+        let l:to_close = blist#move#prevSibling(l:prev)
     endwhile
 
     "   * then just close folds from there to top
@@ -48,11 +48,11 @@ function! blist#fold#focus(lnum)
     " Repeat below
     "   * sweep down & left, closing as we go, until we hit root
     let l:prev = a:lnum
-    let l:to_close = blist#movement#next(l:prev)
+    let l:to_close = blist#move#nextSibling(l:prev)
     while l:to_close != l:prev && indent(l:to_close) > 0
         call blist#fold#close(l:to_close)
         let l:prev = l:to_close
-        let l:to_close = blist#movement#next(l:prev)
+        let l:to_close = blist#move#nextSibling(l:prev)
     endwhile
 
     "   * then just close folds from there to bottom

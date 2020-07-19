@@ -19,8 +19,10 @@ endfunction
 
 call s:mapUser('', 'zh', 'MoveParent')
 call s:mapUser('', 'zl', 'MoveChild')
-call s:mapUser('', 'zk', 'MovePrevious')
-call s:mapUser('', 'zj', 'MoveNext')
+call s:mapUser('', 'zk', 'MovePreviousSibling')
+call s:mapUser('', 'zK', 'MovePrevious')
+call s:mapUser('', 'zj', 'MoveNextSibling')
+call s:mapUser('', 'zJ', 'MoveNext')
 
 call s:mapUser('n', 'za', 'Toggle')
 call s:mapUser('n', 'zo', 'Open')
@@ -46,13 +48,17 @@ function! s:mapPlug(type, from, to)
 endfunction
 
 call s:mapPlug('', 'MoveParent',
-    \':BlistMoveView blist#movement#parent(line("."))<CR>')
+    \':BlistMoveView blist#move#parent(line("."))<CR>')
 call s:mapPlug('', 'MoveChild',
-    \':BlistMoveView blist#movement#child(line("."))<CR>')
+    \':BlistMoveView blist#move#child(line("."))<CR>')
+call s:mapPlug('', 'MovePreviousSibling',
+    \':BlistMoveView blist#move#prevSibling(line("."))<CR>')
+call s:mapPlug('', 'MoveNextSibling',
+    \':BlistMoveView blist#move#nextSibling(line("."))<CR>')
 call s:mapPlug('', 'MovePrevious',
-    \':BlistMoveView blist#movement#previous(line("."))<CR>')
+    \':BlistMoveView blist#move#prev(line("."))<CR>')
 call s:mapPlug('', 'MoveNext',
-    \':BlistMoveView blist#movement#next(line("."))<CR>')
+    \':BlistMoveView blist#move#next(line("."))<CR>')
 
 call s:mapPlug('n', 'Toggle', ':call blist#fold#toggle(line("."))<CR>')
 call s:mapPlug('n', 'Open', ':call blist#fold#open(line("."))<CR>')
