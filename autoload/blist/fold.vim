@@ -1,10 +1,10 @@
 function! blist#fold#text(lnum)
-    let l:indent = indent(a:lnum - 1) + 1
+    let l:indent = indent(prevnonblank(a:lnum - 1)) + 1
     return repeat(' ', l:indent) . '\--' . repeat(' ', winwidth(0))
 endfunction
 
 function! blist#fold#toggle(lnum)
-    if foldclosed(a:lnum + 1) < 0
+    if foldclosed(nextnonblank(a:lnum + 1)) < 0
         call blist#fold#close(a:lnum)
     else
         call blist#fold#open(a:lnum)
@@ -12,51 +12,48 @@ function! blist#fold#toggle(lnum)
 endfunction
 
 function! blist#fold#close(lnum)
-    if indent(a:lnum) >= indent(a:lnum + 1) || foldclosed(a:lnum + 1) >= 0
+    let l:lnum = nextnonblank(a:lnum + 1)
+
+    if indent(a:lnum) >= indent(l:lnum) || foldclosed(l:lnum) >= 0
         " No children or fold already closed
         return
     else
-        silent normal! jzck
+        exe string(l:lnum) . ',' . string(l:lnum) . 'foldclose'
     endif
 endfunction
 
 function! blist#fold#open(lnum)
-    if indent(a:lnum) >= indent(a:lnum + 1)
+    let l:lnum = nextnonblank(a:lnum + 1)
+
+    if indent(a:lnum) >= indent(l:lnum)
         " No children
         return
     else
-        silent normal! jzok
+        exe string(l:lnum) . ',' . string(l:lnum) . 'foldopen'
     endif
 endfunction
 
 function! blist#fold#focus(lnum)
     " Close folds above
-    "   * sweep up & left, closing as we go, until we hit root
-    let l:prev = a:lnum
-    let l:to_close = blist#move#prevSibling(l:prev)
-    while l:to_close != l:prev && indent(l:to_close) > 0
-        call blist#fold#close(l:to_close)
-        let l:prev = l:to_close
-        let l:to_close = blist#move#prevSibling(l:prev)
+    let [l:prev, l:to_close] = [a:lnum, blist#move#prev(a:lnum)]
+    let [l:prev_indent, l:indent] = [indent(l:prev), indent(l:to_close)]
+
+    while l:to_close != l:prev
+        " Except our ancestors (that would close us)
+        if l:indent == l:prev_indent
+            call blist#fold#close(l:to_close)
+        endif
+
+        let [l:prev, l:to_close] = [l:to_close, blist#move#prev(l:to_close)]
+        let [l:prev_indent, l:indent] = [l:indent, indent(l:to_close)]
     endwhile
 
-    "   * then just close folds from there to top
-    if l:to_close > 1
-        silent exe '1,' . string(l:to_close - 1) . 'foldclose'
-    endif
+    " Close below
+    let [l:prev, l:to_close] = [a:lnum, blist#move#next(a:lnum)]
 
-    " Repeat below
-    "   * sweep down & left, closing as we go, until we hit root
-    let l:prev = a:lnum
-    let l:to_close = blist#move#nextSibling(l:prev)
-    while l:to_close != l:prev && indent(l:to_close) > 0
+    while l:to_close != l:prev
         call blist#fold#close(l:to_close)
-        let l:prev = l:to_close
-        let l:to_close = blist#move#nextSibling(l:prev)
-    endwhile
 
-    "   * then just close folds from there to bottom
-    if l:to_close != l:prev
-        silent exe string(l:to_close) . ',$foldclose'
-    endif
+        let [l:prev, l:to_close] = [l:to_close, blist#move#next(l:to_close)]
+    endwhile
 endfunction
