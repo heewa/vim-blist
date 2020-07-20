@@ -44,6 +44,27 @@ call s:mapUser('', 'zp', 'PasteAfter')
 call s:mapUser('', 'zP', 'PasteBefore')
 
 "
+" Bare Movements
+"
+
+call s:mapUser('', 'l', 'MoveRight')
+call s:mapUser('', 'h', 'MoveLeft')
+call s:mapUser('', 'j', 'MoveDown')
+call s:mapUser('', 'k', 'MoveUp')
+
+call s:mapUser('', 'w', 'MoveWord')
+call s:mapUser('', 'W', 'MoveWORD')
+call s:mapUser('', 'e', 'MoveWordEnd')
+call s:mapUser('', 'E', 'MoveWORDEnd')
+call s:mapUser('', 'b', 'MoveBack')
+call s:mapUser('', 'B', 'MoveBACK')
+call s:mapUser('', 'ge', 'MoveBackEnd')
+call s:mapUser('', 'gE', 'MoveBACKEnd')
+
+call s:mapUser('', '0', 'MoveStart')
+call s:mapUser('', '^', 'MoveFirst')
+
+"
 " Plug Mappings
 "
 
@@ -82,3 +103,28 @@ call s:mapPlug('n', 'UnIndent', ':call blist#bullets#unIndent()<CR>')
 
 call s:mapPlug('', 'PasteAfter', ']p')
 call s:mapPlug('', 'PasteBefore', ']P')
+
+call s:mapPlug('', 'MoveRight', ':exe "normal!" blist#baremove#right()<CR>')
+call s:mapPlug('', 'MoveLeft', ':exe "normal!" blist#baremove#left()<CR>')
+call s:mapPlug('', 'MoveDown', ':exe "normal!" blist#baremove#down()<CR>')
+call s:mapPlug('', 'MoveUp', ':exe "normal!" blist#baremove#up()<CR>')
+
+call s:mapPlug('', 'MoveWord',
+    \ ':exe "normal!" blist#baremove#word()<CR>')
+call s:mapPlug('', 'MoveWORD',
+    \ ':exe "normal!" blist#baremove#WORD()<CR>')
+call s:mapPlug('', 'MoveWordEnd',
+    \ ':exe "normal!" blist#baremove#wordEnd()<CR>')
+call s:mapPlug('', 'MoveWORDEnd',
+    \ ':exe "normal!" blist#baremove#WORDEnd()<CR>')
+call s:mapPlug('', 'MoveBack',
+    \ ':exe "normal!" blist#baremove#back()<CR>')
+call s:mapPlug('', 'MoveBACK',
+    \ ':exe "normal!" blist#baremove#BACK()<CR>')
+call s:mapPlug('', 'MoveBackEnd',
+    \ ':exe "normal!" blist#baremove#backEnd()<CR>')
+call s:mapPlug('', 'MoveBACKEnd',
+    \ ':exe "normal!" blist#baremove#BACKEnd()<CR>')
+
+call s:mapPlug('', 'MoveStart', ':exe "normal!" blist#baremove#start()<CR>')
+call s:mapPlug('', 'MoveFirst', ':exe "normal!" blist#baremove#first()<CR>')
