@@ -8,12 +8,45 @@ function! blist#bullets#toggleComplete()
     call setpos('.', l:orig_pos)
 endfunction
 
-function! blist#bullets#indent() range
-    let l:lastline = s:FindIndentEnd(a:firstline, a:lastline)
+function! blist#bullets#fixIndent() range
+    let l:prev = prevnonblank(a:firstline - 1)
+    let l:prev_indent = indent(l:prev)
 
-    if l:lastline >= 0
-        exe 'normal!' string(a:firstline) . ',' . string(l:lastline) . '>'
+    let l:curr = a:firstline
+    let l:curr_indent = indent(l:curr)
+
+    while l:curr <= a:lastline
+        if l:curr_indent > l:prev_indent + s:shiftwidth()
+    endwhile
+endfunction
+
+function! blist#bullets#indent() range
+    " Don't indent if it would leave first line without parent
+    let l:prev = prevnonblank(a:firstline - 1)
+    if a:firstline > 1 && l:prev > 0 && indent(a:firstline) > indent(l:prev)
+        return -1
     endif
+
+    " Don't indent if a full subtree isn't selected
+    if !s:isFullSubtree(a:firstline, a:lastline)
+        return
+    endif
+
+    exe string(a:firstline) . ',' . string(a:lastline) . '>'
+endfunction
+
+function! blist#bullets#unIndent() range
+    let l:before_first = prevnonblank(a:firstline - 1)
+    let l:before_indent = l:before_first > 0 ? indent(l:before_first) : -1
+    let l:after_last = nextnonblank(a:lastline + 1)
+    let l:after_indent = l:after_last > 0 ? indent(l:after_last) : -1
+
+    let l:least_indent = s:oldestInRange(a:firstline, a:lastline)
+
+    exe string(a:firstline) . ',' . string(a:lastline) . '<'
+
+    " Besides unindenting, check if we need to move to be our previous
+    " parent's next sibling
 endfunction
 
 " Indent a new bullet as a child if there are any, otherwise as a sibling.
@@ -27,29 +60,52 @@ endfunction
 " Private
 "
 
-" Find the end line to be indented from a range, or -1 if it's
-" an invalid indent.
-function! s:FindIndentEnd(first_line, last_line)
-    " Don't indent if doing so would leave first line without parent
-    if a:first_line > 1 &&
-            \indent(a:first_line) > indent(prevnonblank(a:first_line - 1))
-        return -1
+if exists('*shiftwidth')
+    function! s:shiftwidth()
+        return shiftwidth()
+    endfunc
+else
+    function! s:shiftwidth()
+        return &sw
+    endfunc
+endif
+
+function! s:isFullSubtree(start, end)
+    let l:start_indent = indent(a:start)
+    let l:curr = nextnonblank(a:start + 1)
+
+    " All lines must be no less indented than the 1st
+    while l:curr <= a:end
+        if indent(l:curr) < l:start_indent
+            return 0
+        endif
+    endwhile
+
+    " There must not be any children remaining outside
+    if indent(nextnonblank(l:curr + 1)) > l:start_index
+        return 0
     endif
 
-    " Find least indented so we can include all the children of all items
-    " in this range
-    let l:lnum = a:first_line
-    let l:indent = indent(l:lnum)
-    while l:lnum < a:last_line
-        let l:lnum = nextnonblank(l:lnum + 1)
-        let l:indent = min([l:indent, indent(l:lnum)])
+    " Multiple-root subtrees (forests?) of the same lvl are fine
+
+    return 1
+endfunction
+
+function! s:oldestInRange(start, end)
+    let l:oldest_line = a:start
+    let l:oldest_indent = indent(a:start)
+    let l:curr_line = nextnonblank(a:start + 1)
+
+    while l:curr_line <= a:end
+        let l:curr_indent = indent(l:curr_line)
+
+        if l:curr_indent < l:oldest_indent
+            let l:oldest_line = l:curr_line
+            let l:oldest_indent = l:curr_indent
+        endif
+
+        let l:curr_line = nextnonblank(l:curr_line + 1)
     endwhile
 
-    " Continue down to find end of tree
-    let l:next = nextnonblank(l:lnum + 1)
-    while indent(l:next) > l:indent
-        let [l:lnum, l:next] = [l:next, nextnonblank(l:next + 1)]
-    endwhile
-
-    return l:lnum
+    return [l:oldest_line, l:oldest_indent]
 endfunction

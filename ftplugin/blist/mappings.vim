@@ -35,8 +35,10 @@ call s:mapUser('n', 'zF', 'FullyFocus')
 
 call s:mapUser('n', 'z-', 'ToggleComplete')
 
+" TODO: fix all indenting
 call s:mapUser('n', 'z>', 'Indent')
 call s:mapUser('v', 'z>', 'Indent')
+call s:mapUser('n', 'z<', 'UnIndent')
 
 call s:mapUser('', 'zp', 'PasteAfter')
 call s:mapUser('', 'zP', 'PasteBefore')
@@ -76,6 +78,7 @@ call s:mapPlug('n', 'ToggleComplete',
 
 call s:mapPlug('n', 'Indent', ':call blist#bullets#indent()<CR>')
 call s:mapPlug('v', 'Indent', ':call blist#bullets#indent()<CR>')
+call s:mapPlug('n', 'UnIndent', ':call blist#bullets#unIndent()<CR>')
 
 call s:mapPlug('', 'PasteAfter', ']p')
 call s:mapPlug('', 'PasteBefore', ']P')
