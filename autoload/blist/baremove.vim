@@ -1,5 +1,5 @@
 function! blist#baremove#right() abort
-    return col('.') < col('$') - 1 ? 'l' : s:down(line('.'), 'f l')
+    return col('.') < col('$') - 1 ? 'l' : s:down(line('.'), '^f l')
 endfunction
 
 function! blist#baremove#left() abort
@@ -8,11 +8,11 @@ function! blist#baremove#left() abort
 endfunction
 
 function! blist#baremove#down() abort
-    return s:down(line('.'), 'f l')
+    return s:down(line('.'), '^f l')
 endfunction
 
 function! blist#baremove#up() abort
-    return s:up(line('.'), 'f l')
+    return s:up(line('.'), '^f l')
 endfunction
 
 function! blist#baremove#word() abort
@@ -88,7 +88,7 @@ function! s:up(lnum, postfix)
     let l:fold_start = foldclosed(l:prev)
     let l:prev = l:fold_start > 0 ? prevnonblank(l:fold_start - 1) : l:prev
 
-    return l:prev < a:lnum ? string(a:lnum - l:prev) . '-' . a:postfix : ''
+    return l:prev < a:lnum ? string(l:prev) . 'gg' . a:postfix : ''
 endfunction
 
 function! s:down(lnum, postfix)
@@ -96,5 +96,5 @@ function! s:down(lnum, postfix)
     let l:fold_end = foldclosedend(l:next)
     let l:next = l:fold_end > 0 ? nextnonblank(l:fold_end + 1) : l:next
 
-    return l:next > a:lnum ? string(l:next - a:lnum) . '+' . a:postfix : ''
+    return l:next > a:lnum ? string(l:next) . 'gg' . a:postfix : ''
 endfunction
