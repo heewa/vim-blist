@@ -30,3 +30,6 @@ setlocal autoindent
 setlocal comments=b:*,b:-,b:+
 setlocal formatoptions=roj
 setlocal indentexpr=blist#bullets#calcNewIndent()
+
+" Check suffix for gf type commands
+setlocal suffixesadd+=.blist
