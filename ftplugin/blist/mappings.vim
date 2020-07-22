@@ -52,14 +52,14 @@ call s:mapUser('', 'h', 'MoveLeft')
 call s:mapUser('', 'j', 'MoveDown')
 call s:mapUser('', 'k', 'MoveUp')
 
-call s:mapUser('', 'w', 'MoveWord')
-call s:mapUser('', 'W', 'MoveWORD')
-call s:mapUser('', 'e', 'MoveWordEnd')
-call s:mapUser('', 'E', 'MoveWORDEnd')
-call s:mapUser('', 'b', 'MoveBack')
-call s:mapUser('', 'B', 'MoveBACK')
-call s:mapUser('', 'ge', 'MoveBackEnd')
-call s:mapUser('', 'gE', 'MoveBACKEnd')
+call s:mapUser('n', 'w', 'MoveWord')
+call s:mapUser('n', 'W', 'MoveWORD')
+call s:mapUser('n', 'e', 'MoveWordEnd')
+call s:mapUser('n', 'E', 'MoveWORDEnd')
+call s:mapUser('n', 'b', 'MoveBack')
+call s:mapUser('n', 'B', 'MoveBACK')
+call s:mapUser('n', 'ge', 'MoveBackEnd')
+call s:mapUser('n', 'gE', 'MoveBACKEnd')
 
 call s:mapUser('', '0', 'MoveStart')
 call s:mapUser('', '^', 'MoveFirst')
@@ -68,22 +68,34 @@ call s:mapUser('', '^', 'MoveFirst')
 " Plug Mappings
 "
 
-function! s:mapPlug(type, from, to)
-    exe a:type . 'noremap <silent>' s:name(a:from) a:to
+function! s:mapPlug(type, from, to, ...)
+    exe a:type . 'noremap' get(a:, 1, '<silent>') s:name(a:from) a:to
 endfunction
 
-call s:mapPlug('', 'MoveParent',
-    \':BlistMoveView blist#move#parent(line("."))<CR>')
-call s:mapPlug('', 'MoveChild',
-    \':BlistMoveView blist#move#child(line("."))<CR>')
-call s:mapPlug('', 'MovePreviousSibling',
-    \':BlistMoveView blist#move#prevSibling(line("."))<CR>')
-call s:mapPlug('', 'MoveNextSibling',
-    \':BlistMoveView blist#move#nextSibling(line("."))<CR>')
-call s:mapPlug('', 'MovePrevious',
-    \':BlistMoveView blist#move#prev(line("."))<CR>')
-call s:mapPlug('', 'MoveNext',
-    \':BlistMoveView blist#move#next(line("."))<CR>')
+function! s:mapNormal(type, from, to)
+    call s:mapPlug(
+        \ a:type,
+        \ a:from,
+        \ '<Cmd>exe <SID>maybeNormal(' . a:to . ')<CR>',
+        \ '')
+endfunction
+
+function! s:maybeNormal(cmds)
+    return empty(a:cmds) ? '' : 'normal! ' . a:cmds
+endfunction
+
+call s:mapNormal('', 'MoveParent',
+    \ 'blist#move#parent(line(".")) . "ggzv^ll"')
+call s:mapNormal('', 'MoveChild',
+    \ 'blist#move#child(line(".")) . "ggzv^ll"')
+call s:mapNormal('', 'MovePreviousSibling',
+    \ 'blist#move#prevSibling(line(".")) . "ggzv^ll"')
+call s:mapNormal('', 'MoveNextSibling',
+    \ 'blist#move#nextSibling(line(".")) . "ggzv^ll"')
+call s:mapNormal('', 'MovePrevious',
+    \ 'blist#move#prev(line(".")) . "ggzv^ll"')
+call s:mapNormal('', 'MoveNext',
+    \ 'blist#move#next(line(".")) . "ggzv^ll"')
 
 call s:mapPlug('n', 'Toggle', ':call blist#fold#toggle(line("."))<CR>')
 call s:mapPlug('n', 'Open', ':call blist#fold#open(line("."))<CR>')
@@ -104,27 +116,19 @@ call s:mapPlug('n', 'UnIndent', ':call blist#bullets#unIndent()<CR>')
 call s:mapPlug('', 'PasteAfter', ']p')
 call s:mapPlug('', 'PasteBefore', ']P')
 
-call s:mapPlug('', 'MoveRight', ':exe "normal!" blist#baremove#right()<CR>')
-call s:mapPlug('', 'MoveLeft', ':exe "normal!" blist#baremove#left()<CR>')
-call s:mapPlug('', 'MoveDown', ':exe "normal!" blist#baremove#down()<CR>')
-call s:mapPlug('', 'MoveUp', ':exe "normal!" blist#baremove#up()<CR>')
+call s:mapNormal('', 'MoveRight', 'blist#baremove#right()')
+call s:mapNormal('', 'MoveLeft', 'blist#baremove#left()')
+call s:mapNormal('', 'MoveDown', 'blist#baremove#down()')
+call s:mapNormal('', 'MoveUp', 'blist#baremove#up()')
 
-call s:mapPlug('', 'MoveWord',
-    \ ':exe "normal!" blist#baremove#word()<CR>')
-call s:mapPlug('', 'MoveWORD',
-    \ ':exe "normal!" blist#baremove#WORD()<CR>')
-call s:mapPlug('', 'MoveWordEnd',
-    \ ':exe "normal!" blist#baremove#wordEnd()<CR>')
-call s:mapPlug('', 'MoveWORDEnd',
-    \ ':exe "normal!" blist#baremove#WORDEnd()<CR>')
-call s:mapPlug('', 'MoveBack',
-    \ ':exe "normal!" blist#baremove#back()<CR>')
-call s:mapPlug('', 'MoveBACK',
-    \ ':exe "normal!" blist#baremove#BACK()<CR>')
-call s:mapPlug('', 'MoveBackEnd',
-    \ ':exe "normal!" blist#baremove#backEnd()<CR>')
-call s:mapPlug('', 'MoveBACKEnd',
-    \ ':exe "normal!" blist#baremove#BACKEnd()<CR>')
+call s:mapNormal('n', 'MoveWord', 'blist#baremove#word()')
+call s:mapNormal('n', 'MoveWORD', 'blist#baremove#WORD()')
+call s:mapNormal('n', 'MoveWordEnd', 'blist#baremove#wordEnd()')
+call s:mapNormal('n', 'MoveWORDEnd', 'blist#baremove#WORDEnd()')
+call s:mapNormal('n', 'MoveBack', 'blist#baremove#back()')
+call s:mapNormal('n', 'MoveBACK', 'blist#baremove#BACK()')
+call s:mapNormal('n', 'MoveBackEnd', 'blist#baremove#backEnd()')
+call s:mapNormal('n', 'MoveBACKEnd', 'blist#baremove#BACKEnd()')
 
-call s:mapPlug('', 'MoveStart', ':exe "normal!" blist#baremove#start()<CR>')
-call s:mapPlug('', 'MoveFirst', ':exe "normal!" blist#baremove#first()<CR>')
+call s:mapNormal('', 'MoveStart', 'blist#baremove#start()')
+call s:mapNormal('', 'MoveFirst', 'blist#baremove#first()')
