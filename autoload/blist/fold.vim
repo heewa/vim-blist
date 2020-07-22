@@ -20,13 +20,13 @@ endfunction
 
 function! blist#fold#fullyClose(lnum)
     let l:child = blist#move#child(a:lnum)
-    let l:last = blist#move#next(a:lnum) - 1
+    let l:end = blist#move#end(a:lnum)
 
-    if l:child == a:lnum || l:child == l:last
+    if l:child == a:lnum || l:child == l:end
         return
     endif
 
-    exe string(l:child) . ',' . string(l:last) . 'foldclose!'
+    exe string(l:child) . ',' . string(l:end) . 'foldclose!'
     exe 'normal!' string(a:lnum) . 'zv'
 endfunction
 
@@ -39,13 +39,13 @@ endfunction
 
 function! blist#fold#fullyOpen(lnum)
     let l:child = blist#move#child(a:lnum)
-    let l:last = blist#move#next(a:lnum) - 1
+    let l:end = blist#move#end(a:lnum)
 
-    if l:child == a:lnum || l:child == l:last
+    if l:child == a:lnum || l:child == l:end
         return
     endif
 
-    exe string(l:child) . ',' . string(l:last) . 'foldopen!'
+    exe string(l:child) . ',' . string(l:end) . 'foldopen!'
 endfunction
 
 function! blist#fold#focus(lnum)

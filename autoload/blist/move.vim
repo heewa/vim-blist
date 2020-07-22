@@ -54,6 +54,15 @@ function! blist#move#next(lnum)
     return l:lnum > 0 && l:indent <= l:start_indent ? l:lnum : a:lnum
 endfunction
 
+" last line of this subtree (usually next-1, if there is a next)
+function! blist#move#end(lnum)
+    let l:start_indent = indent(a:lnum)
+    let [l:end, l:indent] = s:findNext(a:lnum, l:start_indent)
+
+    return prevnonblank(
+        \ l:end > 0 && l:indent <= l:start_indent ? l:end - 1 : line('$'))
+endfunction
+
 function! s:findPrev(lnum, indent)
     if a:indent < 0
         return a:lnum
