@@ -35,16 +35,11 @@ call s:mapUser('n', 'zF', 'FullyFocus')
 
 call s:mapUser('n', 'z-', 'ToggleComplete')
 
-" TODO: fix all indenting
-call s:mapUser('n', 'z>', 'Indent')
-call s:mapUser('v', 'z>', 'Indent')
-call s:mapUser('n', 'z<', 'UnIndent')
-
 call s:mapUser('', 'zp', 'PasteAfter')
 call s:mapUser('', 'zP', 'PasteBefore')
 
 "
-" Bare Movements
+" Bare Commands
 "
 
 call s:mapUser('', 'l', 'MoveRight')
@@ -63,6 +58,9 @@ call s:mapUser('n', 'gE', 'MoveBACKEnd')
 
 call s:mapUser('', '0', 'MoveStart')
 call s:mapUser('', '^', 'MoveFirst')
+
+call s:mapUser('n', '>>', 'Indent')
+call s:mapUser('n', '<<', 'UnIndent')
 
 "
 " Plug Mappings
@@ -109,10 +107,6 @@ call s:mapPlug('n', 'FullyFocus', 'zMzvjzOk')
 call s:mapPlug('n', 'ToggleComplete',
     \':call blist#bullets#toggleComplete()<CR>')
 
-call s:mapPlug('n', 'Indent', ':call blist#bullets#indent()<CR>')
-call s:mapPlug('v', 'Indent', ':call blist#bullets#indent()<CR>')
-call s:mapPlug('n', 'UnIndent', ':call blist#bullets#unIndent()<CR>')
-
 call s:mapPlug('', 'PasteAfter', ']p')
 call s:mapPlug('', 'PasteBefore', ']P')
 
@@ -132,3 +126,8 @@ call s:mapNormal('n', 'MoveBACKEnd', 'blist#baremove#BACKEnd()')
 
 call s:mapNormal('', 'MoveStart', 'blist#baremove#start()')
 call s:mapNormal('', 'MoveFirst', 'blist#baremove#first()')
+
+call s:mapPlug('n', 'Indent',
+    \ '<Cmd>call blist#bullets#indent(line("."))<CR>')
+call s:mapPlug('n', 'UnIndent',
+    \ '<Cmd>call blist#bullets#unIndent(line("."))<CR>')

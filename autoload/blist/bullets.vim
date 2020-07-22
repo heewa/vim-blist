@@ -20,33 +20,39 @@ function! blist#bullets#fixIndent() range
     endwhile
 endfunction
 
-function! blist#bullets#indent() range
+function! blist#bullets#indent(lnum)
     " Don't indent if it would leave first line without parent
-    let l:prev = prevnonblank(a:firstline - 1)
-    if a:firstline > 1 && l:prev > 0 && indent(a:firstline) > indent(l:prev)
+    let l:prev = blist#move#prev(a:lnum)
+    if a:lnum > 1 && l:prev > 0 && indent(a:lnum) > indent(l:prev)
         return -1
     endif
 
-    " Don't indent if a full subtree isn't selected
-    if !s:isFullSubtree(a:firstline, a:lastline)
-        return
-    endif
-
-    exe string(a:firstline) . ',' . string(a:lastline) . '>'
+    let l:end = blist#move#end(a:lnum)
+    exe string(a:lnum) . ',' . string(l:end) . '>'
 endfunction
 
-function! blist#bullets#unIndent() range
-    let l:before_first = prevnonblank(a:firstline - 1)
-    let l:before_indent = l:before_first > 0 ? indent(l:before_first) : -1
-    let l:after_last = nextnonblank(a:lastline + 1)
-    let l:after_indent = l:after_last > 0 ? indent(l:after_last) : -1
+function! blist#bullets#unIndent(lnum)
+    let l:parent = blist#move#parent(a:lnum)
+    let l:end = blist#move#end(a:lnum)
 
-    let l:least_indent = s:oldestInRange(a:firstline, a:lastline)
+    if l:parent <= 0 || l:parent == a:lnum
+        return -1
+    endif
 
-    exe string(a:firstline) . ',' . string(a:lastline) . '<'
+    " Unindent by moving entire subtree of item to after the end of parent
+    let l:parent_end = blist#move#end(l:parent)
+    let l:dest = l:parent_end > 0 ? l:parent_end : line('$')
 
-    " Besides unindenting, check if we need to move to be our previous
-    " parent's next sibling
+    silent! exe string(a:lnum) . ',' . string(l:end) . '<'
+
+    if l:dest > l:end
+        silent! exe string(a:lnum) . ',' . string(l:end) .
+            \ 'move' string(l:dest)
+    endif
+
+    " The move cmd places cursor on the last line, so move it up to the 1st,
+    " where we started
+    silent! exe 'normal!' string(a:lnum - l:end + 1) . '-'
 endfunction
 
 " Indent a new bullet as a child if there are any, otherwise as a sibling.
