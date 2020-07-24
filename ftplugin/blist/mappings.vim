@@ -83,7 +83,7 @@ endfunction
 
 function! s:mapNormal(type, from, to)
     if has('nvim')
-        let l:to = '<Cmd>exe <SID>maybeNormal(' . a:to . ')<CR>'
+        let l:to = '<Cmd>silent exe <SID>maybeNormal(' . a:to . ')<CR>'
     elseif a:type == ''
         " Plain vim does some weird cursor thing for motions where
         " it puts it at the top line of a visual area, not the "current"
@@ -104,12 +104,6 @@ endfunction
 
 function! s:maybeNormal(cmds)
     return empty(a:cmds) ? '' : 'normal! ' . a:cmds
-endfunction
-
-function! s:exeMove(cmds)
-    "throw cmds
-    "echomsg cmds
-    return ''
 endfunction
 
 call s:mapNormal('', 'MoveParent',
