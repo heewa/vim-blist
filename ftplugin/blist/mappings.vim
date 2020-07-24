@@ -46,8 +46,11 @@ call s:mapUser('n', 'zF', 'FullyFocus')
 
 call s:mapUser('n', 'z-', 'ToggleComplete')
 
-call s:mapUser('', 'zp', 'PasteAfter')
-call s:mapUser('', 'zP', 'PasteBefore')
+call s:mapUser('n', 'yy', 'YankItem')
+call s:mapUser('n', 'dd', 'DeleteItem')
+
+call s:mapUser('', 'p', 'PasteAfter')
+call s:mapUser('', 'P', 'PasteBefore')
 
 "
 " Bare Commands
@@ -133,8 +136,13 @@ call s:mapPlug('n', 'FullyFocus', 'zMzvjzOk')
 
 call s:mapCall('n', 'ToggleComplete', 'blist#bullets#toggleComplete()')
 
-call s:mapPlug('', 'PasteAfter', ']p')
-call s:mapPlug('', 'PasteBefore', ']P')
+call s:mapEx('n', 'YankItem',
+    \ 'exe ".," . string(blist#move#end(line("."))) . "y"')
+call s:mapEx('n', 'DeleteItem',
+    \ 'exe ".," . string(blist#move#end(line("."))) . "d"')
+
+call s:mapNormal('', 'PasteAfter', 'blist#modify#pasteAfter()')
+call s:mapNormal('', 'PasteBefore', 'blist#modify#pasteBefore()')
 
 call s:mapNormal('', 'MoveRight', 'blist#baremove#right()')
 call s:mapNormal('', 'MoveLeft', 'blist#baremove#left()')
