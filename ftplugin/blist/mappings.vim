@@ -81,6 +81,15 @@ function! s:mapPlug(type, from, to, ...)
     exe a:type . 'noremap' get(a:, 1, '<silent>') s:name(a:from) a:to
 endfunction
 
+function! s:mapEx(type, from, to)
+    let l:to = (has('nvim') ? '<Cmd>' : ':') . a:to . '<CR>'
+    call s:mapPlug(a:type, a:from, l:to)
+endfunction
+
+function! s:mapCall(type, from, to)
+    call s:mapEx(a:type, a:from, 'call ' . a:to)
+endfunction
+
 function! s:mapNormal(type, from, to)
     if has('nvim')
         let l:to = '<Cmd>silent exe <SID>maybeNormal(' . a:to . ')<CR>'
@@ -106,30 +115,23 @@ function! s:maybeNormal(cmds)
     return empty(a:cmds) ? '' : 'normal! ' . a:cmds
 endfunction
 
-call s:mapNormal('', 'MoveParent',
-    \ 'blist#move#parent(line(".")) . "ggzv^ll"')
-call s:mapNormal('', 'MoveChild',
-    \ 'blist#move#child(line(".")) . "ggzv^ll"')
-call s:mapNormal('', 'MovePreviousSibling',
-    \ 'blist#move#prevSibling(line(".")) . "ggzv^ll"')
-call s:mapNormal('', 'MoveNextSibling',
-    \ 'blist#move#nextSibling(line(".")) . "ggzv^ll"')
-call s:mapNormal('', 'MovePrevious',
-    \ 'blist#move#prev(line(".")) . "ggzv^ll"')
-call s:mapNormal('', 'MoveNext',
-    \ 'blist#move#next(line(".")) . "ggzv^ll"')
+call s:mapNormal('', 'MoveParent', 'blist#move#parent(line(".")) . "ggzv^ll"')
+call s:mapNormal('', 'MoveChild', 'blist#move#child(line(".")) . "ggzv^ll"')
+call s:mapNormal('', 'MovePreviousSibling', 'blist#move#prevSibling(line(".")) . "ggzv^ll"')
+call s:mapNormal('', 'MoveNextSibling', 'blist#move#nextSibling(line(".")) . "ggzv^ll"')
+call s:mapNormal('', 'MovePrevious', 'blist#move#prev(line(".")) . "ggzv^ll"')
+call s:mapNormal('', 'MoveNext', 'blist#move#next(line(".")) . "ggzv^ll"')
 
-call s:mapPlug('n', 'Toggle', ':call blist#fold#toggle(line("."))<CR>')
-call s:mapPlug('n', 'Open', ':call blist#fold#open(line("."))<CR>')
-call s:mapPlug('n', 'FullyOpen', ':call blist#fold#fullyOpen(line("."))<CR>')
-call s:mapPlug('n', 'Close', ':call blist#fold#close(line("."))<CR>')
-call s:mapPlug('n', 'FullyClose', ':call blist#fold#fullyClose(line("."))<CR>')
+call s:mapCall('n', 'Toggle', 'blist#fold#toggle(line("."))')
+call s:mapCall('n', 'Open', 'blist#fold#open(line("."))')
+call s:mapCall('n', 'FullyOpen', 'blist#fold#fullyOpen(line("."))')
+call s:mapCall('n', 'Close', 'blist#fold#close(line("."))')
+call s:mapCall('n', 'FullyClose', 'blist#fold#fullyClose(line("."))')
 
-call s:mapPlug('n', 'Focus', ':call blist#fold#focus(line("."))<CR>')
+call s:mapCall('n', 'Focus', 'blist#fold#focus(line("."))')
 call s:mapPlug('n', 'FullyFocus', 'zMzvjzOk')
 
-call s:mapPlug('n', 'ToggleComplete',
-    \':call blist#bullets#toggleComplete()<CR>')
+call s:mapCall('n', 'ToggleComplete', 'blist#bullets#toggleComplete()')
 
 call s:mapPlug('', 'PasteAfter', ']p')
 call s:mapPlug('', 'PasteBefore', ']P')
@@ -151,7 +153,5 @@ call s:mapNormal('', 'MoveBACKEnd', 'blist#baremove#BACKEnd()')
 call s:mapNormal('', 'MoveStart', 'blist#baremove#start()')
 call s:mapNormal('', 'MoveFirst', 'blist#baremove#first()')
 
-call s:mapPlug('n', 'Indent',
-    \ '<Cmd>call blist#bullets#indent(line("."))<CR>')
-call s:mapPlug('n', 'UnIndent',
-    \ '<Cmd>call blist#bullets#unIndent(line("."))<CR>')
+call s:mapCall('n', 'Indent', 'blist#bullets#indent(line("."))')
+call s:mapCall('n', 'UnIndent', 'blist#bullets#unIndent(line("."))')
