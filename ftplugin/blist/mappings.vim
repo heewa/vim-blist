@@ -10,6 +10,17 @@ endfunction
 
 " Map if there isn't already one to a Plug mapping
 function! s:mapUser(type, from, to)
+    if !has('nvim') && a:type == ''
+        " Plain vim does some weird cursor thing for motions where
+        " it puts it at the top line of a visual area, not the "current"
+        " line. I can't find a workaround, so just don't map it.
+
+        call s:mapUser('n', a:from, a:to)
+        call s:mapUser('o', a:from, a:to)
+
+        return
+    endif
+
     let l:to = s:name(a:to)
 
     if !hasmapto(l:to, a:type == '' ? 'nvo' : a:type)
@@ -47,14 +58,14 @@ call s:mapUser('', 'h', 'MoveLeft')
 call s:mapUser('', 'j', 'MoveDown')
 call s:mapUser('', 'k', 'MoveUp')
 
-call s:mapUser('n', 'w', 'MoveWord')
-call s:mapUser('n', 'W', 'MoveWORD')
-call s:mapUser('n', 'e', 'MoveWordEnd')
-call s:mapUser('n', 'E', 'MoveWORDEnd')
-call s:mapUser('n', 'b', 'MoveBack')
-call s:mapUser('n', 'B', 'MoveBACK')
-call s:mapUser('n', 'ge', 'MoveBackEnd')
-call s:mapUser('n', 'gE', 'MoveBACKEnd')
+call s:mapUser('', 'w', 'MoveWord')
+call s:mapUser('', 'W', 'MoveWORD')
+call s:mapUser('', 'e', 'MoveWordEnd')
+call s:mapUser('', 'E', 'MoveWORDEnd')
+call s:mapUser('', 'b', 'MoveBack')
+call s:mapUser('', 'B', 'MoveBACK')
+call s:mapUser('', 'ge', 'MoveBackEnd')
+call s:mapUser('', 'gE', 'MoveBACKEnd')
 
 call s:mapUser('', '0', 'MoveStart')
 call s:mapUser('', '^', 'MoveFirst')
@@ -71,15 +82,34 @@ function! s:mapPlug(type, from, to, ...)
 endfunction
 
 function! s:mapNormal(type, from, to)
-    call s:mapPlug(
-        \ a:type,
-        \ a:from,
-        \ '<Cmd>exe <SID>maybeNormal(' . a:to . ')<CR>',
-        \ '')
+    if has('nvim')
+        let l:to = '<Cmd>exe <SID>maybeNormal(' . a:to . ')<CR>'
+    elseif a:type == ''
+        " Plain vim does some weird cursor thing for motions where
+        " it puts it at the top line of a visual area, not the "current"
+        " line. I can't find a workaround, so just don't map it.
+
+        call s:mapNormal('n', a:from, a:to)
+        call s:mapNormal('o', a:from, a:to)
+
+        return
+    elseif a:type == 'v'
+        let l:to = ':<C-u>exe <SID>maybeNormal("gv".' . a:to . ")<CR>"
+    else
+        let l:to = ':<C-u>exe <SID>maybeNormal(' . a:to . ')<CR>'
+    endif
+
+    call s:mapPlug(a:type, a:from, l:to, '')
 endfunction
 
 function! s:maybeNormal(cmds)
     return empty(a:cmds) ? '' : 'normal! ' . a:cmds
+endfunction
+
+function! s:exeMove(cmds)
+    "throw cmds
+    "echomsg cmds
+    return ''
 endfunction
 
 call s:mapNormal('', 'MoveParent',
@@ -115,14 +145,14 @@ call s:mapNormal('', 'MoveLeft', 'blist#baremove#left()')
 call s:mapNormal('', 'MoveDown', 'blist#baremove#down()')
 call s:mapNormal('', 'MoveUp', 'blist#baremove#up()')
 
-call s:mapNormal('n', 'MoveWord', 'blist#baremove#word()')
-call s:mapNormal('n', 'MoveWORD', 'blist#baremove#WORD()')
-call s:mapNormal('n', 'MoveWordEnd', 'blist#baremove#wordEnd()')
-call s:mapNormal('n', 'MoveWORDEnd', 'blist#baremove#WORDEnd()')
-call s:mapNormal('n', 'MoveBack', 'blist#baremove#back()')
-call s:mapNormal('n', 'MoveBACK', 'blist#baremove#BACK()')
-call s:mapNormal('n', 'MoveBackEnd', 'blist#baremove#backEnd()')
-call s:mapNormal('n', 'MoveBACKEnd', 'blist#baremove#BACKEnd()')
+call s:mapNormal('', 'MoveWord', 'blist#baremove#word()')
+call s:mapNormal('', 'MoveWORD', 'blist#baremove#WORD()')
+call s:mapNormal('', 'MoveWordEnd', 'blist#baremove#wordEnd()')
+call s:mapNormal('', 'MoveWORDEnd', 'blist#baremove#WORDEnd()')
+call s:mapNormal('', 'MoveBack', 'blist#baremove#back()')
+call s:mapNormal('', 'MoveBACK', 'blist#baremove#BACK()')
+call s:mapNormal('', 'MoveBackEnd', 'blist#baremove#backEnd()')
+call s:mapNormal('', 'MoveBACKEnd', 'blist#baremove#BACKEnd()')
 
 call s:mapNormal('', 'MoveStart', 'blist#baremove#start()')
 call s:mapNormal('', 'MoveFirst', 'blist#baremove#first()')
