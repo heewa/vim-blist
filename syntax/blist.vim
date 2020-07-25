@@ -8,12 +8,19 @@ syntax region BlistItemCompleted oneline matchgroup=BlistBulletCompleted start=/
 " TODO: comments? maybe? I dunno, sounds complicated
 "syntax region BlistComment oneline matchgroup
 
-syntax match BlistTag /#\h\w*/ contained containedin=BlistItem
-syntax match BlistAt /@\h\w*/ contained containedin=BlistItem
+syntax match BlistTag /#\w\+/ contained containedin=BlistItem
+syntax match BlistAt /@\w\+/ contained containedin=BlistItem
 syntax region BlistCodeInline oneline matchgroup=BlistCodeInlineEnds start=/`/ end=/`/ concealends contained containedin=BlistItem
 
-syntax match BlistTagDef /##\h\w*/ contained containedin=BlistItem
-syntax match BlistAtDef /@@\h\w*/ contained containedin=BlistItem
+syntax match BlistTagDef /##\w\+/ contained containedin=BlistItem
+syntax match BlistAtDef /@@\w\+/ contained containedin=BlistItem
+
+
+syntax region BlistLink_Title matchgroup=BlistLink_Ends start=/\[/ end=/\]/ concealends contained containedin=BlistItem nextgroup=BlistLink_Url
+syntax region BlistLink_Url matchgroup=BlistLink_Ends start=/(/ end=/)/ oneline conceal contained
+
+syntax match BlistLink_EmptyTitle /\[\s*\]/ conceal contained containedin=BlistItem nextgroup=BlistLink_ShownUrl
+syntax region BlistLink_ShownUrl matchgroup=BlistLink_Ends start=/(/ end=/)/ oneline concealends contained
 
 "highlight link BlistBullet Identifier
 highlight link BlistBulletCompleted Comment
@@ -22,6 +29,11 @@ highlight link BlistTagDef Typedef
 highlight link BlistAt Tag
 highlight link BlistAtDef Typedef
 highlight link BlistCodeInline String
+
+highlight link BlistLink_Title Underlined
+highlight link BlistLink_Url Underlined
+highlight link BlistLink_ShownUrl Underlined
+highlight link BlistLink_Ends Comment
 
 highlight! link Folded Comment
 highlight link BlistItem Normal

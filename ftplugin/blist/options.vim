@@ -1,3 +1,5 @@
+setlocal conceallevel=3
+
 " Fold behavior
 setlocal foldenable
 setlocal foldlevel=0
