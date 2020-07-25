@@ -31,7 +31,7 @@ highlight link BlistAtDef Typedef
 highlight link BlistCodeInline String
 
 highlight link BlistLink_Title Underlined
-highlight link BlistLink_Url Underlined
+highlight link BlistLink_Url Comment
 highlight link BlistLink_ShownUrl Underlined
 highlight link BlistLink_Ends Comment
 
