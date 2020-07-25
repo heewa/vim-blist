@@ -2,8 +2,18 @@ function! blist#bullets#toggleComplete()
     let l:orig_pos = getcurpos()
 
     s/
-        \^\(\s*\)\([*-]\)/
-        \\=submatch(1) . {'*': '-', '-': '*'}[submatch(2)]/
+        \^\(\s*\)\([*+-]\)/
+        \\=submatch(1) . {'*': '-', '+': '-', '-': '*'}[submatch(2)]/
+
+    call setpos('.', l:orig_pos)
+endfunction
+
+function! blist#bullets#toggleIncomplete()
+    let l:orig_pos = getcurpos()
+
+    s/
+        \^\(\s*\)\([*+-]\)/
+        \\=submatch(1) . {'*': '+', '-': '+', '+': '*'}[submatch(2)]/
 
     call setpos('.', l:orig_pos)
 endfunction

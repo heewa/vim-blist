@@ -45,6 +45,7 @@ call s:mapUser('n', 'zf', 'Focus')
 call s:mapUser('n', 'zF', 'FullyFocus')
 
 call s:mapUser('n', 'z-', 'ToggleComplete')
+call s:mapUser('n', 'z+', 'ToggleIncomplete')
 
 call s:mapUser('n', 'yy', 'YankItem')
 call s:mapUser('n', 'dd', 'DeleteItem')
@@ -135,6 +136,7 @@ call s:mapCall('n', 'Focus', 'blist#fold#focus(line("."))')
 call s:mapPlug('n', 'FullyFocus', 'zMzvjzOk')
 
 call s:mapCall('n', 'ToggleComplete', 'blist#bullets#toggleComplete()')
+call s:mapCall('n', 'ToggleIncomplete', 'blist#bullets#toggleIncomplete()')
 
 call s:mapEx('n', 'YankItem',
     \ 'exe ".," . string(blist#move#end(line("."))) . "y"')
