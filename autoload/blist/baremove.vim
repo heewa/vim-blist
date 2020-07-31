@@ -19,62 +19,6 @@ function! blist#baremove#up() abort
     return s:motionUp(line('.'), 0)
 endfunction
 
-function! blist#baremove#word() abort
-    " This is bad, huh
-    let l:lnum = line('.')
-    return getline(l:lnum)[col('.')-1:] !~ '^\w*$' ?
-        \ 'w' : s:motionDown(l:lnum, 0) . 'w'
-endfunction
-
-function! blist#baremove#WORD() abort
-    " This is bad, huh
-    let l:lnum = line('.')
-    return getline(l:lnum)[col('.')-1:] =~ '\s' ?
-        \ 'W' : s:motionDown(l:lnum, 0) . 'W'
-endfunction
-
-function! blist#baremove#wordEnd() abort
-    " This is bad, huh
-    let l:lnum = line('.')
-    return getline(l:lnum)[col('.')-1:] =~ '\k\+$' ?
-        \ 'e' : s:motionDown(l:lnum, 0) . 'e'
-endfunction
-
-function! blist#baremove#WORDEnd() abort
-    " This is bad, huh
-    let l:lnum = line('.')
-    return getline(l:lnum)[col('.')-1:] =~ '\w\+$' ?
-        \ 'e' : s:motionDown(l:lnum, 0) . 'e'
-endfunction
-
-function! blist#baremove#back() abort
-    " This is bad, huh
-    let l:lnum = line('.')
-    return getline(l:lnum)[:col('.')] =~ '^\s*\S\s\+' ?
-        \ 'b' : s:motionUp(l:lnum, '$b')
-endfunction
-
-function! blist#baremove#BACK() abort
-    " This is bad, huh
-    let l:lnum = line('.')
-    return getline(l:lnum)[:col('.')] =~ '^\s*\S\s\+' ?
-        \ 'b' : s:motionUp(l:lnum, '$b')
-endfunction
-
-function! blist#baremove#backEnd() abort
-    " This is bad, huh
-    let l:lnum = line('.')
-    return getline(l:lnum)[:col('.')] =~ '^\s*\S\s\+' ?
-        \ 'ge' : s:motionUp(l:lnum, '$ge')
-endfunction
-
-function! blist#baremove#BACKEnd() abort
-    " This is bad, huh
-    let l:lnum = line('.')
-    return getline(l:lnum)[:col('.')] =~ '^\s*\S\s\+' ?
-        \ 'ge' : s:motionUp(l:lnum, '$ge')
-endfunction
-
 function! blist#baremove#start() abort
     return '^f l'
 endfunction
