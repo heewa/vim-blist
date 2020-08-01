@@ -13,33 +13,30 @@ endfunction
 
 function! blist#fold#close(lnum)
     let l:child = blist#move#child(a:lnum)
-    if l:child != a:lnum && foldclosed(l:child) < 0
+    if l:child != a:lnum && foldclosed(l:child) <= 0
         exe string(l:child) . ',' . string(l:child) . 'foldclose'
     endif
 endfunction
 
 function! blist#fold#fullyClose(lnum)
     let l:child = blist#move#child(a:lnum)
-    let l:end = blist#move#end(a:lnum)
-
-    if l:child == a:lnum || l:child == l:end
-        return
+    let l:last = prevnonblank(blist#move#last(a:lnum))
+    if l:child != a:lnum && l:last >= l:child
+        exe string(l:child) . ',' . string(l:last) . 'foldclose!'
+        normal! zv
     endif
-
-    exe string(l:child) . ',' . string(l:end) . 'foldclose!'
-    exe 'normal!' string(a:lnum) . 'zv'
 endfunction
 
 function! blist#fold#open(lnum)
     let l:child = blist#move#child(a:lnum)
     if l:child != a:lnum && foldclosed(l:child) > 0
-        exe string(l:child) . ',' . string(l:child) . 'foldopen'
+        exe string(l:child) . ',' . string(blist#move#last(a:lnum)) . 'foldopen'
     endif
 endfunction
 
 function! blist#fold#fullyOpen(lnum)
     let l:child = blist#move#child(a:lnum)
-    let l:end = blist#move#end(a:lnum)
+    let l:end = blist#move#last(a:lnum)
 
     if l:child == a:lnum || l:child == l:end
         return

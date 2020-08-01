@@ -111,9 +111,9 @@ function! s:definePlugMappings()
     call s:mapCall('n', 'ToggleIncomplete', 'blist#bullets#toggleIncomplete()')
 
     call s:mapEx('n', 'YankItem',
-        \ 'exe ".," . string(blist#move#end(line("."))) . "y"')
+        \ 'exe ".," . string(blist#move#last(line("."))) . "y"')
     call s:mapEx('n', 'DeleteItem',
-        \ 'exe ".," . string(blist#move#end(line("."))) . "d"')
+        \ 'exe ".," . string(blist#move#last(line("."))) . "d"')
 
     call s:mapNormal('', 'PasteAfter', 'blist#modify#pasteAfter()')
     call s:mapNormal('', 'PasteBefore', 'blist#modify#pasteBefore()')

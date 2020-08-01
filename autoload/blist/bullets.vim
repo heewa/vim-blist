@@ -37,20 +37,20 @@ function! blist#bullets#indent(lnum)
         return -1
     endif
 
-    let l:end = blist#move#end(a:lnum)
+    let l:end = blist#move#last(a:lnum)
     exe string(a:lnum) . ',' . string(l:end) . '>'
 endfunction
 
 function! blist#bullets#unIndent(lnum)
     let l:parent = blist#move#parent(a:lnum)
-    let l:end = blist#move#end(a:lnum)
+    let l:end = blist#move#last(a:lnum)
 
     if l:parent <= 0 || l:parent == a:lnum
         return -1
     endif
 
     " Unindent by moving entire subtree of item to after the end of parent
-    let l:parent_end = blist#move#end(l:parent)
+    let l:parent_end = blist#move#last(l:parent)
     let l:dest = l:parent_end > 0 ? l:parent_end : line('$')
 
     silent! exe string(a:lnum) . ',' . string(l:end) . '<'
