@@ -32,22 +32,24 @@ endfunction
 "
 
 function! s:motionUp(start, postfix)
-    return s:motionTo(a:start, s:lineUp(a:start), a:postfix)
+    let l:end = s:lineUp(a:start)
+    return s:motionTo(a:start, l:end) .
+        \ (a:postfix ? a:postfix : s:firstCol(l:end))
 endfunction
 
 function! s:motionDown(start, postfix)
-    return s:motionTo(a:start, s:lineDown(a:start), a:postfix)
+    let l:end = s:lineDown(a:start)
+    return s:motionTo(a:start, l:end) .
+        \ (a:postfix ? a:postfix : s:firstCol(l:end))
 endfunction
 
-function! s:motionTo(start, end, postfix)
-    if a:end == a:start
-        return ''
-    endif
-
-    return (a:end == a:start + 1 ? 'j' :
+function! s:motionTo(start, end)
+    return a:end == a:start ? '' :
+        \ a:end == a:start + 1 ? 'j' :
         \ a:end == a:start - 1 ? 'k' :
-        \ string(a:end) . 'gg') .
-        \ (empty(a:postfix) ? s:firstCol(a:end) : a:postfix)
+        \ a:end <= 0 ? 'gg' :
+        \ a:end >= line('$') ? 'G' :
+        \ string(a:end) . 'gg'
 endfunction
 
 function! s:firstCol(lnum)
@@ -56,21 +58,17 @@ function! s:firstCol(lnum)
 endfunction
 
 function! s:lineUp(lnum)
-    let l:prev = prevnonblank(a:lnum - 1)
-    if l:prev <= 0
-        return a:lnum
-    endif
-
-    let l:fold_start = foldclosed(l:prev)
-    return l:fold_start > 0 ? prevnonblank(l:fold_start - 1) : l:prev
+    " Ignore blanks when checking fold (because of vim fold behavior),
+    " but not when moving through lines (so blank lines can be moved onto)
+    let l:fold_start = foldclosed(prevnonblank(a:lnum - 1))
+    let l:up = l:fold_start >= 0 ? l:fold_start - 1 : a:lnum - 1
+    return l:up > 1 ? l:up : 1
 endfunction
 
 function! s:lineDown(lnum)
-    let l:next = nextnonblank(a:lnum + 1)
-    if l:next <= 0
-        return a:lnum
-    endif
-
-    let l:fold_end = foldclosedend(l:next)
-    return l:fold_end > 0 ? nextnonblank(l:fold_end + 1) : l:next
+    " Ignore blanks when checking fold (because of vim fold behavior),
+    " but not when moving through lines (so blank lines can be moved onto)
+    let l:fold_end = foldclosedend(nextnonblank(a:lnum + 1))
+    let l:down = l:fold_end >= 0 ? l:fold_end + 1 : a:lnum + 1
+    return l:down <= line('$') ? l:down : a:lnum
 endfunction
