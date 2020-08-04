@@ -13,10 +13,14 @@ function! blist#modify#pasteAfter()
         return "m`j]P'`"
     else
         " With closed children, paste as next sibling
-        return "m`" . blist#move#nextSibling(l:lnum) . "gg]P'`"
+        return "m`" .
+            \ blist#move#next(l:lnum) .
+            \ "gg]P'`" .
+            \ blist#move#nextSibling(l:lnum) .
+            \ "gg"
     endif
 endfunction
 
 function! blist#modify#pasteBefore()
-    return getregtype(v:register) == 'V' ? ']P' : 'p'
+    return getregtype(v:register) == 'V' ? ']P' : 'P'
 endfunction

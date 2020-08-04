@@ -27,6 +27,11 @@ function! blist#baremove#first() abort
     return '^w'
 endfunction
 
+function! blist#baremove#firstCol(lnum)
+    " Handle broken bullet syntax by checking & using a safer motion.
+    return match(getline(a:lnum), s:firstPosStrict) >= 0 ? '^ll' : '^'
+endfunction
+
 "
 " Private
 "
@@ -34,13 +39,13 @@ endfunction
 function! s:motionUp(start, postfix)
     let l:end = s:lineUp(a:start)
     return s:motionTo(a:start, l:end) .
-        \ (a:postfix ? a:postfix : s:firstCol(l:end))
+        \ (a:postfix ? a:postfix : blist#baremove#firstCol(l:end))
 endfunction
 
 function! s:motionDown(start, postfix)
     let l:end = s:lineDown(a:start)
     return s:motionTo(a:start, l:end) .
-        \ (a:postfix ? a:postfix : s:firstCol(l:end))
+        \ (a:postfix ? a:postfix : blist#baremove#firstCol(l:end))
 endfunction
 
 function! s:motionTo(start, end)
@@ -50,11 +55,6 @@ function! s:motionTo(start, end)
         \ a:end <= 0 ? 'gg' :
         \ a:end >= line('$') ? 'G' :
         \ string(a:end) . 'gg'
-endfunction
-
-function! s:firstCol(lnum)
-    " Handle broken bullet syntax by checking & using a safer motion.
-    return match(getline(a:lnum), s:firstPosStrict) >= 0 ? '^ll' : '^'
 endfunction
 
 function! s:lineUp(lnum)
