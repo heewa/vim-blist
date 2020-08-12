@@ -50,6 +50,13 @@ augroup BLIST_VIEWS
     autocmd BufWinEnter *.blist silent! loadview
 augroup END
 
+function! s:disableDefaultMappings()
+    " Changing 'foldenable'
+    call s:disableMap('', 'zn')
+    call s:disableMap('', 'zN')
+    call s:disableMap('', 'zi')
+endfunction
+
 function! s:defineUserMappings()
     call s:mapUser('', 'zh', 'MoveParent')
     call s:mapUser('', 'zl', 'MoveChild')
@@ -138,6 +145,14 @@ function! s:name(base)
     return '<Plug>Blist' . a:base . '<>'
 endfunction
 
+function! s:disableMap(type, from)
+    if has('nvim')
+        exe a:type . 'map <buffer> ' a:from '<Nop>'
+    else
+        exe a:type . 'map <buffer> ' a:from ''
+    endif
+endfunction
+
 " Map if there isn't already one to a Plug mapping
 function! s:mapUser(type, from, to)
     if !has('nvim') && a:type == ''
@@ -199,11 +214,16 @@ endfunction
 " Set Mappings
 
 command! BlistSetMappings BlistSetUserMappings | BlistSetPlugMappings
+command! BlistDisableDefaultMappings call s:disableDefaultMappings()
 command! BlistSetUserMappings call s:defineUserMappings()
 command! BlistSetBareMappings call s:defineBareMappings()
 command! BlistSetPlugMappings call s:definePlugMappings()
 
 if get(g:, 'blist_map', v:true)
+    if get(g:, 'blist_disable_default_mappings', v:true)
+        call s:disableDefaultMappings()
+    endif
+
     if get(g:, 'blist_map_user', v:true)
         call s:defineUserMappings()
     endif
