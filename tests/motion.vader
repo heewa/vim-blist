@@ -1,0 +1,122 @@
+Given blist (some bullets):
+  * 111
+  	* 222
+  * 333
+  	* 444
+
+Before (set initial state):
+  set filetype=
+  set filetype=blist
+  set foldenable
+  normal! zR
+  normal! 3G3|
+
+Do (don't move):
+  r!
+
+Expect blist:
+  * 111
+  	* 222
+  * !33
+  	* 444
+
+Do (move left from start):
+  hr!
+
+Expect blist:
+  * 111
+  	* 22!
+  * 333
+  	* 444
+
+Do (move left from middle):
+  lhr!
+
+Expect blist:
+  * 111
+  	* 222
+  * !33
+  	* 444
+
+Do (move down):
+  jr!
+
+Expect blist:
+  * 111
+  	* 222
+  * 333
+  	* !44
+
+Do (move up):
+  kr!
+
+Expect blist:
+  * 111
+  	* !22
+  * 333
+  	* 444
+
+Do (move right):
+  l
+  r!
+
+Expect blist:
+  * 111
+  	* 222
+  * 3!3
+  	* 444
+
+Do (move right from end):
+  $
+  l
+  r!
+
+Expect blist:
+  * 111
+  	* 222
+  * 333
+  	* !44
+
+Do (move left over fold):
+  1Gzc3G0
+  h
+  r!
+
+Expect blist:
+  * 11!
+  	* 222
+  * 333
+  	* 444
+
+Do (move down over fold):
+  1Gzc0
+  j
+  r!
+
+Expect blist:
+  * 111
+  	* 222
+  * !33
+  	* 444
+
+Do (move up over fold):
+  1Gzc3G0
+  k
+  r!
+
+Expect blist:
+  * !11
+  	* 222
+  * 333
+  	* 444
+
+Do (move right over fold):
+  1Gzc$
+  l
+  r!
+
+Expect blist:
+  * 111
+  	* 222
+  * !33
+  	* 444
