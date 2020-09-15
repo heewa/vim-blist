@@ -39,13 +39,13 @@ endfunction
 function! s:motionUp(start, postfix)
     let l:end = s:lineUp(a:start)
     return s:motionTo(a:start, l:end) .
-        \ (a:postfix ? a:postfix : blist#baremove#firstCol(l:end))
+        \ (type(a:postfix) == v:t_string ? a:postfix : blist#baremove#firstCol(l:end))
 endfunction
 
 function! s:motionDown(start, postfix)
     let l:end = s:lineDown(a:start)
     return s:motionTo(a:start, l:end) .
-        \ (a:postfix ? a:postfix : blist#baremove#firstCol(l:end))
+        \ (type(a:postfix) == v:t_string ? a:postfix : blist#baremove#firstCol(l:end))
 endfunction
 
 function! s:motionTo(start, end)
