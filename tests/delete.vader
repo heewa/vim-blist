@@ -1,0 +1,117 @@
+Given blist (some bullets):
+  * 111
+  	* 222
+  * 333
+  	* 444
+  		* 555
+  	* 666
+  * 777
+
+Before (set initial state):
+  set filetype=
+  set filetype=blist
+  set foldenable
+  normal! zR
+
+Do (without children):
+  2Gdd
+
+Expect blist:
+  * 111
+  * 333
+  	* 444
+  		* 555
+  	* 666
+  * 777
+
+Do (with children):
+  3Gdd
+
+Expect blist:
+  * 111
+  	* 222
+  * 777
+
+Do (without children):
+  2Gdd
+
+Expect blist:
+  * 111
+  * 333
+  	* 444
+  		* 555
+  	* 666
+  * 777
+
+Given (bullets with spaces):
+
+  * 000
+  * 111
+  	* 222
+  
+  * 333
+  	* 444
+    
+  		* 555
+    
+  	* 666
+  
+  * 777
+
+Do (with space after):
+  4Gdd
+
+Expect blist:
+  
+  * 000
+  * 111
+  * 333
+  	* 444
+    
+  		* 555
+    
+  	* 666
+  
+  * 777
+
+Do (with space before):
+  3Gdd
+
+Expect blist:
+  
+  * 000
+  * 333
+  	* 444
+    
+  		* 555
+    
+  	* 666
+  
+  * 777
+
+Do (with space before & after):
+  9Gdd
+
+Expect blist:
+
+  * 000
+  * 111
+  	* 222
+  
+  * 333
+  	* 444
+    
+  	* 666
+  
+  * 777
+
+Do (with space between children):
+  6Gdd
+
+Expect blist:
+
+  * 000
+  * 111
+  	* 222
+  
+  * 777
