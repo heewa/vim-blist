@@ -1,0 +1,73 @@
+Given blist (some bullets):
+  * 111
+  	* 222
+  * 333
+  	* 444
+  		* 555
+  	* 666
+
+Before (set initial state):
+  set filetype=
+  set filetype=blist
+  set foldenable
+  normal! zR
+
+Do (newline before, indented item above):
+  3GOyay
+
+Expect blist:
+  * 111
+  	* 222
+  * yay
+  * 333
+  	* 444
+  		* 555
+  	* 666
+
+Do (newline before, indented, less indented above):
+  2GOyay
+
+Expect blist:
+  * 111
+  	* yay
+  	* 222
+  * 333
+  	* 444
+  		* 555
+  	* 666
+
+Do (newline before, indented, more indented above):
+  6GOyay
+
+Expect blist:
+  * 111
+  	* 222
+  * 333
+  	* 444
+  		* 555
+  	* yay
+  	* 666
+
+Do (newline after, with children):
+  1Goyay
+
+Expect blist:
+  * 111
+  	* yay
+  	* 222
+  * 333
+  	* 444
+  		* 555
+  	* 666
+
+Do (newline after, no children):
+  2Goyay
+
+Expect blist:
+  * 111
+  	* 222
+  	* yay
+  * 333
+  	* 444
+  		* 555
+  	* 666
