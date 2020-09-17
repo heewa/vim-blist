@@ -1,0 +1,83 @@
+Given blist (some bullets):
+  * 111
+  	* 222
+  	* 333
+  * 444
+
+Before (set initial state):
+  set filetype=
+  set filetype=blist
+  set foldenable
+  normal! zR
+  let @" = "* !1!\n"
+  let @a = '* !1!\n\t* !2!'
+
+Do (single, before, no sibling):
+  1GP
+
+Expect blist:
+  * !1!
+  * 111
+  	* 222
+  	* 333
+  * 444
+
+Do (single, before, parent):
+  2GP
+
+Expect blist:
+  * 111
+  	* !1!
+  	* 222
+  	* 333
+  * 444
+
+Do (single, before, sibling w children):
+  4GP
+
+Expect blist:
+  * 111
+  	* 222
+  	* 333
+  * !1!
+  * 444
+
+Do (single, after, sibling):
+  2Gp
+
+Expect blist:
+  * 111
+  	* 222
+  	* !1!
+  	* 333
+  * 444
+
+Do (single, after, non sibling):
+  3Gp
+
+Expect blist:
+  * 111
+  	* 222
+  	* 333
+  	* !1!
+  * 444
+
+Do (single, after, no sibling):
+  4Gp
+
+Expect blist:
+  * 111
+  	* 222
+  	* 333
+  * 444
+  * !1!
+
+Do (single, after, children):
+  1Gp
+
+Expect blist:
+  * 111
+  	* !1!
+  	* 222
+  	* 333
+  * 444
