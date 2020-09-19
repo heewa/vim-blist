@@ -24,3 +24,24 @@ endfunction
 function! blist#modify#pasteBefore()
     return getregtype(v:register) == 'V' ? ']P' : 'P'
 endfunction
+
+function! blist#modify#newlineAfter()
+    let l:lnum = line('.')
+    let l:foldend = foldclosedend(l:lnum + 1)
+    if l:foldend <= 0
+        return 'o'
+    else
+        call append(l:foldend, repeat("\t", indent(l:lnum) / s:shiftwidth()) .. '* ')
+        return (l:foldend + 1) . 'GA'
+    endif
+endfunction
+
+if exists('*shiftwidth')
+    function! s:shiftwidth()
+        return shiftwidth()
+    endfunc
+else
+    function! s:shiftwidth()
+        return &sw
+    endfunc
+endif

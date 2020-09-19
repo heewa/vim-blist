@@ -1,0 +1,31 @@
+Before (set initial state):
+  set filetype=
+  set filetype=blist
+  set foldenable
+  normal! zR
+
+Given blist (some bullets):
+  * 111
+  	* 222
+  		* 333
+  * 444
+
+Do (newline after, folded, sibling next):
+  1Gzcoyay
+
+Expect blist:
+  * 111
+  	* 222
+  		* 333
+  * yay
+  * 444
+
+Do (newline after, folded, lvl up next):
+  2Gzcoyay
+
+Expect blist:
+  * 111
+  	* 222
+  		* 333
+  	* yay
+  * 444

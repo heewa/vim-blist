@@ -93,6 +93,8 @@ function! s:defineBareMappings()
     call s:mapUser('', '0', 'MoveStart')
     call s:mapUser('', '^', 'MoveFirst')
 
+    call s:mapUser('n', 'o', 'NewlineAfter')
+
     call s:mapUser('n', '>>', 'Indent')
     call s:mapUser('n', '<<', 'UnIndent')
 endfunction
@@ -132,6 +134,8 @@ function! s:definePlugMappings()
 
     call s:mapNormal('', 'MoveStart', 'blist#baremove#start()')
     call s:mapNormal('', 'MoveFirst', 'blist#baremove#first()')
+
+    call s:mapFeedKeys('n', 'NewlineAfter', 'blist#modify#newlineAfter()')
 
     call s:mapCall('n', 'Indent', 'blist#bullets#indent(line("."))')
     call s:mapCall('n', 'UnIndent', 'blist#bullets#unIndent(line("."))')
@@ -184,6 +188,10 @@ endfunction
 
 function! s:mapCall(type, from, to)
     call s:mapEx(a:type, a:from, 'call ' . a:to)
+endfunction
+
+function! s:mapFeedKeys(type, from, to)
+    call s:mapCall(a:type, a:from, 'feedkeys(' . a:to . ', "ni")')
 endfunction
 
 function! s:mapNormal(type, from, to)
