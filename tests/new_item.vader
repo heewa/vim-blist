@@ -71,3 +71,29 @@ Expect blist:
   	* 444
   		* 555
   	* 666
+
+Given blist (some bullets):
+  * 111
+  	* 222
+  		* 333
+  * 444
+
+Do (newline after, folded, sibling next):
+  1Gzcoyay
+
+Expect blist:
+  * 111
+  	* 222
+  		* 333
+  * yay
+  * 444
+
+Do (newline after, folded, lvl up next):
+  2Gzcoyay
+
+Expect blist:
+  * 111
+  	* 222
+  		* 333
+  	* yay
+  * 444
