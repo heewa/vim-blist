@@ -81,3 +81,29 @@ Expect blist:
   	* 222
   	* 333
   * 444
+
+Given blist (other bullets):
+  * 111
+  	* 222
+  		* 333
+  * 444
+
+Do (single, after folded, next is sibling):
+  1Gzcp
+
+Expect blist:
+  * 111
+  	* 222
+  		* 333
+  * !1!
+  * 444
+
+Do (single, after folded, next is lvl up):
+  2Gzcp
+
+Expect blist:
+  * 111
+  	* 222
+  		* 333
+  	* !1!
+  * 444

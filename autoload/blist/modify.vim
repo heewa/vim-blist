@@ -4,20 +4,30 @@ function! blist#modify#pasteAfter()
     endif
 
     let l:lnum = line('.')
-    let l:next_lnum = nextnonblank(l:lnum + 1)
-    if l:next_lnum <= 0 || indent(l:lnum) >=  indent(l:next_lnum)
+    let l:indent = indent(l:lnum)
+
+    let l:next = nextnonblank(l:lnum + 1)
+    let l:indent_next = indent(l:next)
+
+    let l:foldend = foldclosedend(l:next)
+    let l:after = nextnonblank(l:foldend + 1)
+    let l:indent_after = indent(l:after)
+
+    if l:next <= 0 || l:indent >=  l:indent_next
         " With no children, regular is fine
         return ']p'
-    elseif  foldclosed(l:next_lnum) <= 0
-        " With open children, paste as child
-        return "m`j]P'`"
+    elseif  l:foldend <= 0
+        " With open children, paste as child by pasting before the first child
+        return 'j]P'
+    elseif l:indent_after == l:indent
+        " With closed children and a next sibling, insert as a sibling before
+        " next
+        return l:after . 'G]P'
     else
-        " With closed children, paste as next sibling
-        return "m`" .
-            \ blist#move#next(l:lnum) .
-            \ "gg]P'`" .
-            \ blist#move#nextSibling(l:lnum) .
-            \ "gg"
+        " No sibling, insert a temp one to anchor the paste, then remove
+        "call insert(l:after, repeat("\t", indent(l:lnum) / s:shiftwidth()) .. '* ')
+        let @9 = repeat("\t", l:indent / s:shiftwidth()) . '* '
+        return l:after . "GO\<C-u>\<C-r>\9\<Esc>]pkdd"
     endif
 endfunction
 
