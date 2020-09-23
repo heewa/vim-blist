@@ -120,3 +120,78 @@ Expect blist:
   	* 222
   * !33
   	* 444
+
+Given (more bullets):
+  * 1111111111
+  	* 2222222222
+  * 3333333333
+  	* 4444444444
+
+Do (move up over a col that is an indent):
+  $h
+  k
+  r!
+
+Expect blist:
+  * 1111111111
+  	* 2222!22222
+  * 3333333333
+  	* 4444444444
+
+Do (move down over a col that is an indent):
+  1G$h
+  j
+  r!
+
+Expect blist:
+  * 1111111111
+  	* 2222!22222
+  * 3333333333
+  	* 4444444444
+
+Given (mutlilevel bullets):
+  * 111
+  	* 222
+  		* 333
+  	* 444
+  		* 555
+  * 666
+
+Do (move down over indent):
+  2G
+  lj
+  r!
+
+Expect:
+  * 111
+  	* 222
+  		* !33
+  	* 444
+  		* 555
+  * 666
+
+Do (move up over indent):
+  4G
+  lk
+  r!
+
+Expect:
+  * 111
+  	* 222
+  		* !33
+  	* 444
+  		* 555
+  * 666
+
+Do (move up over 2 lvl indent):
+  6G
+  lk
+  r!
+
+Expect:
+  * 111
+  	* 222
+  		* 333
+  	* 444
+  		* !55
+  * 666

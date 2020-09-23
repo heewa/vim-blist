@@ -2,21 +2,34 @@ let s:firstPosStrict = '^\s*[*+-]\s.'
 let s:firstPosLoose = '^\s*\([*+-]\s\)\?.\?'
 
 function! blist#baremove#right() abort
-    return col('.') < col('$') - 1 ? 'l' : s:motionDown(line('.'), 0)
+    if col('.') < col('$') - 1
+        return 'l'
+    endif
+
+    let l:pos = getcurpos()
+    let l:end = s:lineDown(l:pos[1])
+    return s:toLine(l:pos[1], l:end) . s:toCol(l:end, 0)
 endfunction
 
 function! blist#baremove#left() abort
     let l:pos = getcurpos()
-    return l:pos[2] > matchend(getline(l:pos[1]), s:firstPosLoose) ?
-        \ 'h' : s:motionUp(l:pos[1], '$')
+    if l:pos[2] > matchend(getline(l:pos[1]), s:firstPosLoose)
+        return 'h'
+    endif
+
+    return s:toLine(l:pos[1], s:lineUp(l:pos[1])) . '$'
 endfunction
 
 function! blist#baremove#down() abort
-    return s:motionDown(line('.'), 0)
+    let l:pos = getcurpos()
+    let l:end = s:lineDown(l:pos[1])
+    return s:toLine(l:pos[1], l:end) . s:toCol(l:end, l:pos[4])
 endfunction
 
 function! blist#baremove#up() abort
-    return s:motionUp(line('.'), 0)
+    let l:pos = getcurpos()
+    let l:end = s:lineUp(l:pos[1])
+    return s:toLine(l:pos[1], l:end) . s:toCol(l:end, l:pos[4])
 endfunction
 
 function! blist#baremove#start() abort
@@ -27,34 +40,36 @@ function! blist#baremove#first() abort
     return '^w'
 endfunction
 
-function! blist#baremove#firstCol(lnum)
-    " Handle broken bullet syntax by checking & using a safer motion.
-    return match(getline(a:lnum), s:firstPosStrict) >= 0 ? '^ll' : '^'
-endfunction
-
 "
 " Private
 "
 
-function! s:motionUp(start, postfix)
-    let l:end = s:lineUp(a:start)
-    return s:motionTo(a:start, l:end) .
-        \ (type(a:postfix) == v:t_string ? a:postfix : blist#baremove#firstCol(l:end))
-endfunction
-
-function! s:motionDown(start, postfix)
-    let l:end = s:lineDown(a:start)
-    return s:motionTo(a:start, l:end) .
-        \ (type(a:postfix) == v:t_string ? a:postfix : blist#baremove#firstCol(l:end))
-endfunction
-
-function! s:motionTo(start, end)
+function! s:toLine(start, end)
     return a:end == a:start ? '' :
         \ a:end == a:start + 1 ? 'j' :
         \ a:end == a:start - 1 ? 'k' :
         \ a:end <= 0 ? 'gg' :
         \ a:end >= line('$') ? 'G' :
         \ string(a:end) . 'gg'
+endfunction
+
+function! blist#baremove#firstCol()
+    echo(matchend(getline(line('.')), s:firstPosStrict))
+endfunction
+
+function! s:toCol(line, col)
+    let l:first_col = blist#utils#expandCol(
+        \ matchend(getline(a:line), s:firstPosStrict),
+        \ indent(a:line))
+
+    if l:first_col < 0
+        " Probably a broken bullet, so just go to the start
+        return '^'
+    elseif a:col <= l:first_col
+        return '^ll'
+    endif
+
+    return string(a:col) . '|'
 endfunction
 
 function! s:lineUp(lnum)

@@ -26,7 +26,7 @@ function! blist#bullets#fixIndent() range
     let l:curr_indent = indent(l:curr)
 
     while l:curr <= a:lastline
-        if l:curr_indent > l:prev_indent + s:shiftwidth()
+        if l:curr_indent > l:prev_indent + blist#utils#shiftwidth()
     endwhile
 endfunction
 
@@ -75,16 +75,6 @@ endfunction
 "
 " Private
 "
-
-if exists('*shiftwidth')
-    function! s:shiftwidth()
-        return shiftwidth()
-    endfunc
-else
-    function! s:shiftwidth()
-        return &sw
-    endfunc
-endif
 
 function! s:isFullSubtree(start, end)
     let l:start_indent = indent(a:start)

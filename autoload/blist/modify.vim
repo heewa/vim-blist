@@ -25,8 +25,7 @@ function! blist#modify#pasteAfter()
         return l:after . 'G]P'
     else
         " No sibling, insert a temp one to anchor the paste, then remove
-        "call insert(l:after, repeat("\t", indent(l:lnum) / s:shiftwidth()) .. '* ')
-        let @9 = repeat("\t", l:indent / s:shiftwidth()) . '* '
+        let @9 = repeat("\t", l:indent / blist#utils#shiftwidth()) . '* '
         return l:after . "GO\<C-u>\<C-r>\9\<Esc>]pkdd"
     endif
 endfunction
@@ -41,17 +40,7 @@ function! blist#modify#newlineAfter()
     if l:foldend <= 0
         return 'o'
     else
-        call append(l:foldend, repeat("\t", indent(l:lnum) / s:shiftwidth()) .. '* ')
+        call append(l:foldend, repeat("\t", indent(l:lnum) / blist#utils#shiftwidth()) .. '* ')
         return (l:foldend + 1) . 'GA'
     endif
 endfunction
-
-if exists('*shiftwidth')
-    function! s:shiftwidth()
-        return shiftwidth()
-    endfunc
-else
-    function! s:shiftwidth()
-        return &sw
-    endfunc
-endif
