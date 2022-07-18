@@ -18,8 +18,8 @@ syntax match BlistAtDef /@@\w\+/ contained containedin=BlistItem,BlistItemIncomp
 
 
 syntax region BlistLink_Title matchgroup=BlistLink_Ends start=/\[/ end=/\]/ concealends contained containedin=BlistItem,BlistItemIncomplete nextgroup=BlistLink_Url
-syntax region BlistLink_Title_Completed matchgroup=BlistLink_Ends start=/\[/ end=/\]/ contained containedin=BlistItemCompleted nextgroup=BlistLink_Url
-syntax region BlistLink_Url matchgroup=BlistLink_Ends start=/(/ end=/)/ oneline conceal contained
+syntax region BlistLink_Title_Completed matchgroup=BlistLink_Ends start=/\[/ end=/\]/ concealends contained containedin=BlistItemCompleted nextgroup=BlistLink_Url
+syntax region BlistLink_Url matchgroup=BlistLink_Ends start=/(/ end=/)/ oneline contained
 
 syntax match BlistLink_EmptyTitle /\[\s*\]/ conceal contained containedin=BlistItem,BlistItemIncomplete nextgroup=BlistLink_ShownUrl
 syntax region BlistLink_ShownUrl matchgroup=BlistLink_Ends start=/(/ end=/)/ oneline concealends contained
