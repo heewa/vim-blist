@@ -12,10 +12,10 @@ setlocal foldmethod=indent
 setlocal foldtext=blist#fold#text(v:foldstart)
 
 " Tabs
-setlocal shiftwidth=0
-setlocal softtabstop=0
+setlocal shiftwidth=4
+setlocal softtabstop=4
 setlocal tabstop=4
-setlocal noexpandtab
+setlocal expandtab
 
 " Wrap, indenting to align with item content
 setlocal wrap
